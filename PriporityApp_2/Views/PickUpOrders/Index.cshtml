@@ -1,0 +1,477 @@
+﻿@model PriorityApp.Service.Models.AddPickUpOrderModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_CSLayout.cshtml";
+    float holdReminingQuantity = 0;
+
+}
+<style>
+    #NOOrdersSpain {
+        margin: auto;
+    }
+
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 3px solid #ddd;
+    }
+
+    th, td {
+        text-align: center;
+        padding: 8px;
+        margin: 0px 10px 10px 10px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    table tr {
+        height: 110px;
+    }
+
+    .qty {
+        margin-right: 40px;
+        margin-top: 0px;
+    }
+</style>
+
+<script src="~/DataTable/jquery-3.5.1.js"></script>
+<script src="~/DataTable/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="~/DataTable/jquery.dataTables.min.css">
+<script src="/lib/jquery/dist/jquery.js"></script>
+<link rel="stylesheet" href="~/css/newStyleSheet.css">
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+            $('#SubRegionSelectedId').change(function () {
+                var url = '@Url.Content("~/")' + "PickUpOrders/StateFilter";
+                var ddlsource = "#SubRegionSelectedId";
+                $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
+                    var items = '';
+                    $('#StateSelectedId').empty();
+                    $.each(data, function (i, state) {
+                        items += "<option value='" + state.value + "'>" + state.text + "</option>";
+                    });
+                    $('#StateSelectedId').html(items);
+                });
+            });
+
+        $('#StateSelectedId').change(function () {
+            var url = '@Url.Content("~/")' + "PickUpOrders/TerritoryFilter";
+            var ddlsource = "#StateSelectedId";
+                $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
+                    var items = '';
+                    $('#TerritorySelectedId').empty();
+                    $.each(data, function (i, territory) {
+                        items += "<option value='" + territory.value + "'>" + territory.text + "</option>";
+                    });
+                    $('#TerritorySelectedId').html(items);
+                });
+        });
+
+        $('#TerritorySelectedId').change(function () {
+            var url = '@Url.Content("~/")' + "PickUpOrders/ZoneFilter";
+            var ddlsource = "#TerritorySelectedId";
+                $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
+                    var items = '';
+                    $('#ZoneSelectedId').empty();
+                    $.each(data, function (i, zone) {
+                        items += "<option value='" + zone.value + "'>" + zone.text + "</option>";
+                    });
+                    $('#ZoneSelectedId').html(items);
+                });
+        });
+
+
+            @*$('#CustomerSelectedId').change(function() {
+
+                @if(Model.Customers !=null)
+                {
+                    long x = Model.CustomerSelectedId;
+                    Model.OrderModel.orders = Model.OrderModel.orders.Where(o => o.CustomerId == x).ToList();
+                }
+
+            });*@
+    });
+    var AssignedValuesArray = [];
+    var SavedValuesArray = [0];
+    var totalQuantity = 0;
+    function QuantityValidation(radioButtonListId, index, priorityQuantityId, holdReminingQuantity3, OrderQuantityId)
+    {
+        var tempholdReminingQuantity3 = holdReminingQuantity3;
+        var insertedQuantity = parseFloat(priorityQuantityId.value);
+        var orderQuantity = parseFloat(OrderQuantityId.value);
+        var selectedPriorityId = radioButtonListId.value;
+        if (selectedPriorityId != 2)
+        {
+            if (insertedQuantity <= orderQuantity)
+            {
+
+                if (selectedPriorityId == 3) {
+                    AssignedValuesArray[index] = insertedQuantity;
+                }
+                else
+                {
+                    AssignedValuesArray[index] = 0;
+                }
+                totalQuantity = AssignedValuesArray.reduce(function (a, b) { return parseFloat(a) + parseFloat(b); });
+                var totalCheckResult = checkTotalQuantityVsHoldRemainingQuantity(tempholdReminingQuantity3, totalQuantity);
+                if (totalCheckResult == true)
+                {
+
+                }
+                else
+                {
+                    alert("you do not have enough quantity");
+                    resetIfFalse(index, priorityQuantityId, radioButtonListId, holdReminingQuantity3);
+                }
+            }
+            else
+
+            {
+
+                alert("please you must insert quantity less than or equal order quantity");
+                resetIfFalse(index, priorityQuantityId, radioButtonListId, holdReminingQuantity3);
+            }
+        }
+        else
+        {
+            alert("please you must select priority");
+            resetIfFalse(index, priorityQuantityId, radioButtonListId, holdReminingQuantity3);
+        }
+
+    }
+
+
+    function resetIfFalse(index, priorityQuantityId, radioButtonListId, holdReminingQuantity2)
+    {
+        priorityQuantityId.value = 0;
+        radioButtonListId.value = 2;
+        AssignedValuesArray[index] = 0;
+        totalQuantity = AssignedValuesArray.reduce(function (a, b) { return parseFloat(a) + parseFloat(b); });
+        document.getElementById("total").value = totalQuantity;
+        checkTotalQuantityVsHoldRemainingQuantity(holdReminingQuantity2, totalQuantity);
+    }
+
+
+
+    function checkTotalQuantityVsHoldRemainingQuantity(holdReminingQuantity2, totalQuantity)
+    {
+        var holdReminingQuantity3 = parseFloat(holdReminingQuantity2) - parseFloat(totalQuantity);
+        document.getElementById("remaining").value = holdReminingQuantity3;
+        document.getElementById("total").value = totalQuantity;
+        document.getElementById("calculatedRemainingQuantity").value = holdReminingQuantity3;
+        document.getElementById('test').value = holdReminingQuantity3;
+        if (holdReminingQuantity3 >= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+</script>
+<style>
+    select {
+        width: 150px;
+        height: 60px;
+        border-radius: 10px;
+    }
+
+    table {
+        margin-bottom: 40px;
+    }
+
+        table th {
+            margin: 20px;
+        }
+
+        table td {
+            margin: 20px;
+        }
+
+    input {
+        margin-left: 20px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        var table = $('#example').DataTable({
+            "scrollY": "700px",
+            "scrollX": "200px",
+
+            "paging": false
+        });
+
+        $('a.toggle-vis').on('click', function (e) {
+            e.preventDefault();
+
+            // Get the column API object
+            var column = table.column($(this).attr('data-column'));
+
+            // Toggle the visibility
+            column.visible(!column.visible());
+        });
+    });
+</script>
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-controller="PickUpOrders" asp-action="SearchForCustomers" method="post" class="form-horizontal" role="form">
+    <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
+    <div class="form-group">
+        <div class="form-row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <label class="control-label">Priority Date</label>
+                <input type="date" id="SelectedPriorityDate" asp-for="SelectedPriorityDate" />
+            </div>
+        </div>
+
+        @if (Model.SubRegions == null)
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">SubRegion</label>
+                    <select id="SubRegionSelectedId" name="SubRegionSelectedId" asp-for="SubRegionSelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">SubRegion</label>
+                    <select id="SubRegionSelectedId" name="SubRegionSelectedId" asp-for="SubRegionSelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(Model.SubRegions, "Id", "Name"))"></select>
+                </div>
+            </div>
+        }
+        @if (Model.States == null)
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">State</label>
+                    <select id="StateSelectedId" name="StateSelectedId" asp-for="StateSelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">State</label>
+                    <select id="StateSelectedId" name="StateSelectedId" asp-for="StateSelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(Model.States, "Id", "Name"))"></select>
+                </div>
+            </div>
+
+        }
+
+        @if (Model.Territories == null)
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">Territory</label>
+
+                    <select id="TerritorySelectedId" name="TerritorySelectedId" asp-for="TerritorySelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">Territory</label>
+
+                    <select id="TerritorySelectedId" name="TerritorySelectedId" asp-for="TerritorySelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(Model.Territories, "Id", "Name"))"></select>
+
+                </div>
+            </div>
+        }
+
+
+        @if (Model.Zones == null)
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">Zone</label>
+                    <select id="ZoneSelectedId" name="ZoneSelectedId" asp-for="ZoneSelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">Zone</label>
+                    <select id="ZoneSelectedId" name="ZoneSelectedId" asp-for="ZoneSelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(Model.Zones, "Id", "Name"))"></select>
+                </div>
+            </div>
+        }
+
+        @if (Model.Customers != null)
+        {
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label class="control-label">Customer</label>
+                    <select id="CustomerSelectedId" name="CustomerSelectedId" asp-for="CustomerSelectedId"
+                            class="form-control"
+                            asp-items="@(new SelectList(Model.Customers, "Id", "CustomerName"))"></select>
+                </div>
+            </div>
+        }
+
+
+
+    </div>
+    <input type="submit" value="Search" />
+
+</form>
+
+
+<div class="row FormMaindiv">
+    <form asp-action="SaveOrders" class="CreateForm" asp-controller="PickUpOrders" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <table class="display table table-striped" style="text-align:center">
+            <thead class="thead-dark">
+                <tr>
+                    <th> Customer Name</th>
+                    <th>Order Number</th>
+                    <th>Item Number</th>
+                    <th>LineID</th>
+                    <th>Order Quantity</th>
+                    <th> Priority</th>
+                    <th> Quantity</th>
+
+
+            </thead>
+            <tbody>
+                @if (Model.pickUpOrders != null)
+                {
+                    if (Model.HoldModel != null)
+                    {
+                        holdReminingQuantity = Model.HoldModel.ReminingQuantity;
+                        <script>
+                             var holdReminingQuantity2 = @Model.HoldModel.ReminingQuantity;
+                        </script>
+                        @for (int index = 0; index < Model.pickUpOrders.Count; index++)
+                        {
+                            string radioButtonListId = "";
+                            radioButtonListId = "RBLI" + index;
+                            string priorityQuantityId = "";
+                            priorityQuantityId = "PQ" + index;
+                            string OrderQuantityId = "OQ" + index;
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(model => model.pickUpOrders[index].Customer.CustomerName)
+                                    <input class="form-check-input" asp-for="pickUpOrders[index].Customer.Id" type="hidden" />
+                                </td>
+                                <td>
+                                    <input class="form-check-input" asp-for="pickUpOrders[index].OrderNumber" type="Number" style="width:100px" value=0 />
+                                </td>
+                                <td>
+                                    <select id="@Model.pickUpOrders[index].ItemSelectedId" name="ItemSelectedId" asp-for="pickUpOrders[index].ItemSelectedId"
+                                            class="form-control" style="width:100px" asp-items="@(new SelectList(Model.Items, "Id", "Name"))"></select>
+                                    <input class="form-check-input" asp-for="pickUpOrders[index].ItemSelectedId" type="hidden" style="width:100px" />
+
+                                </td>
+
+                                <td>
+                                    <input class="form-check-input" asp-for="pickUpOrders[index].LineID" type="Number" style="width:100px" />
+
+                                </td>
+                                <td>
+                                    <input class="form-check-input" id="@OrderQuantityId" asp-for="pickUpOrders[index].OrderQuantity" type="Number" style="width:100px" />
+
+                                </td>
+
+                                <td style="width:200px">
+                                    <input class="form-check-input" id="@radioButtonListId" asp-for="pickUpOrders[index].PriorityId" type="radio" value="2" selected disabled style="margin-left:40px" onchange="QuantityValidation(@radioButtonListId, @index, @priorityQuantityId, @holdReminingQuantity, @OrderQuantityId);" /><label style="margin-left:60px">No</label>
+                                    <input class="form-check-input" id="@radioButtonListId" asp-for="pickUpOrders[index].PriorityId" type="radio" value="3" style="margin-left:40px" onchange="QuantityValidation(@radioButtonListId, @index, @priorityQuantityId, @holdReminingQuantity, @OrderQuantityId);" /><label style="margin-left:60px">Norm</label>
+                                    <input class="form-check-input" id="@radioButtonListId" asp-for="pickUpOrders[index].PriorityId" type="radio" value="4" style="margin-left:40px" onchange="QuantityValidation(@radioButtonListId, @index, @priorityQuantityId, @holdReminingQuantity, @OrderQuantityId);" /><label style="margin-left:60px">Extra</label>
+                                </td>
+                                <td>
+                                    <input class="form-check-input" id="@priorityQuantityId" asp-for="pickUpOrders[index].PriorityQuantity" type="Number" onchange="QuantityValidation(@radioButtonListId, @index, @priorityQuantityId, @holdReminingQuantity, @OrderQuantityId);" style="width:100px" />
+
+                                </td>
+                                <input class="form-check-input" asp-for="SelectedPriorityDate" type="hidden" style="width:100px" />
+
+                                <input class="form-check-input" asp-for="HoldModel.ReminingQuantity" type="hidden" style="width:100px" />
+                                <input class="form-check-input" asp-for="HoldModel.PriorityDate" type="hidden" style="width:100px" />
+
+                                <input class="form-check-input" asp-for="HoldModel.territoryId" type="hidden" style="width:100px" />
+
+                                <input class="form-check-input" asp-for="HoldModel.QuotaQuantity" type="hidden" style="width:100px" />
+                                <input id="calculatedRemainingQuantity" class="form-check-input" asp-for="HoldModel.ReminingQuantity" type="hidden" style="width:100px" />
+
+                                @Html.Hidden("test", Model.HoldModel.ReminingQuantity)
+                            </tr>
+
+                        }
+                    }
+
+                }
+                @if (Model.HoldModel != null)
+                {
+                    <span> Total</span>
+                    <input id="total" type="number" value="0" disabled style="margin:10px 20px 20px 0" />
+                    <span>Remaining Quantity</span>
+                    <input id="remaining" type="number" disabled value="@Model.HoldModel.ReminingQuantity" style="margin:10px 20px 20px 0" />
+                }
+            </tbody>
+        </table>
+        <div class="form-group" style="margin-top:20px">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Submit" asp-action="SubmitOrders" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+@*<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @T("General_Delete_ConfirmationTitle")
+                </div>
+                <div class="modal-body">
+                    @T("General_Delete_ConfirmationMsg")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@T("General_Cancel")</button>
+                    @Html.RawActionLink(T("General_Delete"), "Delete", new { id = Model.Id }, new { @class = "btn btn-danger" })
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@*<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete">@T("General_Delete")  <i class='fa fa-trash' style='font-size:16px; color:white'></i></button>*@

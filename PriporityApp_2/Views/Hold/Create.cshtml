@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/NiceAdmin/_CSLayout.cshtml";
+}
+
+<h3>Upload Quota File</h3>
+
+<div class="text-center uploadOrdersDiv">
+    <form asp-controller="Hold" asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-6">
+                <input type="file" name="postedFile" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 mt-3">
+                <input type="submit" value="Upload" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</div>

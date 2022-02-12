@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@addTagHelper*, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/NiceAdmin/_CSLayout.cshtml";
+}
+<style>
+    .searchbtn {
+        margin: 20px 20px 20px 40px;
+        border-radius: 10px;
+        width: 200px;
+    }
+</style>
+<h4>Upload PIckUpOrders</h4>
+
+<div class="text-center uploadOrdersDiv">
+    <form asp-controller="PickUpOrders" asp-action="AddPickupOrders" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
+                <input type="file" name="postedFile" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-lg-1">
+                <input type="submit" value="Upload" class="btn btn-primary btn-lg searchbtn" />
+            </div>
+        </div>
+    </form>
+</div>
+<form asp-action="DownloadAddPickUpTemplate">
+    <input type="submit" value="Download Template" class="btn btn-link" style="margin-bottom:40px" />
+</form>
