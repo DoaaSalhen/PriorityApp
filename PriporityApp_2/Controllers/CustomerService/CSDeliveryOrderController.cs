@@ -395,7 +395,7 @@ namespace PriorityApp.Controllers.CustomerService
                 return RedirectToAction("ERROR404");
                 _logger.LogError(e.ToString());
             }
-            return null;
+            //return null;
         }
         public async Task<ActionResult> Confirm(SubmittInfo model)
         {

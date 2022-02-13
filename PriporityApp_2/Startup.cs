@@ -152,7 +152,7 @@ namespace PriporityApp_2
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Item}/{action=Index}/{id?}");
+                    pattern: "{PriorityTool}/{controller=Item}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
                 endpoints.MapHub<NotificationHub>("/NotificationHub");
 

@@ -102,7 +102,7 @@ namespace authtest.Areas.Identity.Pages.Account
                     }
                     else if (roles.Contains("CustomerService"))
                     {
-                        returnUrl = Url.Content("~/pend/index");
+                        returnUrl = Url.Content("~/PriorityTool/pend/index");
                     }
                     else if (roles.Contains("Sales"))
                     {
