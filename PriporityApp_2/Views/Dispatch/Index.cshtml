@@ -64,7 +64,7 @@
             var ddlsource = "#SubRegionSelectedId";
             var items = '';
             if ($(ddlsource).val() != -1) {
-                var url = '@Url.Content("~/")' + "Dispatch/StateFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/Dispatch/StateFilter";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     $('#StateSelectedId').empty();
                     $.each(data, function (i, state) {

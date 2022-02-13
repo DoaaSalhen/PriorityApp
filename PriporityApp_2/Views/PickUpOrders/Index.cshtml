@@ -50,7 +50,7 @@
     $(document).ready(function () {
 
             $('#SubRegionSelectedId').change(function () {
-                var url = '@Url.Content("~/")' + "PickUpOrders/StateFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/PickUpOrders/StateFilter";
                 var ddlsource = "#SubRegionSelectedId";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     var items = '';
@@ -63,7 +63,7 @@
             });
 
         $('#StateSelectedId').change(function () {
-            var url = '@Url.Content("~/")' + "PickUpOrders/TerritoryFilter";
+            var url = '@Url.Content("~/")' + "PriorityTool/PickUpOrders/TerritoryFilter";
             var ddlsource = "#StateSelectedId";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     var items = '';
@@ -76,7 +76,7 @@
         });
 
         $('#TerritorySelectedId').change(function () {
-            var url = '@Url.Content("~/")' + "PickUpOrders/ZoneFilter";
+            var url = '@Url.Content("~/")' + "PriorityTool/PickUpOrders/ZoneFilter";
             var ddlsource = "#TerritorySelectedId";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     var items = '';

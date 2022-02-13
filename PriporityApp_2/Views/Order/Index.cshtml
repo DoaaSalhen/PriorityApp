@@ -61,7 +61,7 @@
             var items = '';
 
             if ($(ddlsource).val() != -1) {
-                var url = '@Url.Content("~/")' + "CSDeliveryOrder/ZoneFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/CSDeliveryOrder/ZoneFilter";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     $('#ZoneSelectedId').empty();
                     $.each(data, function (i, zone) {

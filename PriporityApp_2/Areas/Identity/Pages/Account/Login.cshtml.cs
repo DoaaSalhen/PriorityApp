@@ -76,7 +76,7 @@ namespace authtest.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             //returnUrl = returnUrl ?? Url.Content("~/item/create");
-            returnUrl = Url.Content("~/item/create");
+            returnUrl = Url.Content("~/PriorityTool/item/create");
 
             if (ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace authtest.Areas.Identity.Pages.Account
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
                     {
-                        returnUrl = Url.Content("~/item/create");
+                        returnUrl = Url.Content("~/PriorityTool/item/create");
                     }
                     else if (roles.Contains("CustomerService"))
                     {
@@ -106,11 +106,11 @@ namespace authtest.Areas.Identity.Pages.Account
                     }
                     else if (roles.Contains("Sales"))
                     {
-                        returnUrl = Url.Content("~/Order/index");
+                        returnUrl = Url.Content("~/PriorityTool/Order/index");
                     }
                     else if (roles.Contains("Dispatch"))
                     {
-                        returnUrl = Url.Content("~/Dispatch/Index");
+                        returnUrl = Url.Content("~/PriorityTool/Dispatch/Index");
                     }
                     return LocalRedirect(returnUrl);
                 }

@@ -50,7 +50,7 @@
             var ddlsource = "#SubRegionSelectedId";
             var items = '';
             if ($(ddlsource).val() != -1) {
-                var url = '@Url.Content("~/")' + "CSDeliveryOrder/StateFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/CSDeliveryOrder/StateFilter";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     $('#StateSelectedId').empty();
                     $.each(data, function (i, state) {
@@ -70,7 +70,7 @@
 
             var items = '';
             if ($(ddlsource).val() != -1) {
-                var url = '@Url.Content("~/")' + "CSDeliveryOrder/TerritoryFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/CSDeliveryOrder/TerritoryFilter";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     $('#TerritorySelectedId').empty();
                     $.each(data, function (i, territory) {
@@ -92,7 +92,7 @@
             var items = '';
 
             if ($(ddlsource).val() != -1) {
-                var url = '@Url.Content("~/")' + "CSDeliveryOrder/ZoneFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/CSDeliveryOrder/ZoneFilter";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     $('#ZoneSelectedId').empty();
                     $.each(data, function (i, zone) {

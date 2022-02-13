@@ -13,7 +13,7 @@
             var ddlsource = "#StateId";
             if ($(ddlsource).val() != -2)
             {
-                var url = '@Url.Content("/")' + "DeliveryCustomer/DisplayZones";
+                var url = '@Url.Content("/")' + "PriorityTool/DeliveryCustomer/DisplayZones";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                 var items = '';
                 $("#ZoneId").empty();
