@@ -49,21 +49,32 @@
 <h1>Edit</h1>
 
 <h4>Hold</h4>
+<style>
+    div{
+        margin-bottom:30px;
+    }
+</style>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PriorityDate" />
-            <input type="hidden" asp-for="territoryId" />
+            <input type="hidden" asp-for="userId" />
             <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" id="UserName" class="form-control" readonly />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div>
                 <label asp-for="QuotaQuantity" class="control-label"></label>
-                <input asp-for="QuotaQuantity" id="QuotaQuantity" class="form-control"  onchange="checkIfCanDecrease(@Model.QuotaQuantity,  @Model.ReminingQuantity)"/>
+                <input asp-for="QuotaQuantity" id="QuotaQuantity" class="form-control" onchange="checkIfCanDecrease(@Model.QuotaQuantity,  @Model.ReminingQuantity)" />
                 <span asp-validation-for="QuotaQuantity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ReminingQuantity" class="control-label"></label>
-                <input asp-for="ReminingQuantity" id ="ReminingQuantity" readonly class="form-control" />
+                <input asp-for="ReminingQuantity" id="ReminingQuantity" readonly class="form-control" />
                 <span asp-validation-for="ReminingQuantity" class="text-danger"></span>
             </div>
             <div class="form-group">

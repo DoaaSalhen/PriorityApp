@@ -57,7 +57,7 @@
     <table id="example" class="display table table-striped" style="text-align: center; width:100%">
         <thead class="table-dark">
             <tr>
-                <th>Territory Name</th>
+                <th>Salesman</th>
                 <th> Assigned Quantity</th>
                 <th>Remaining Quantity</th>
                 <th>Quota</th>
@@ -76,7 +76,7 @@
                     float assigned = Model.holdModels[index].QuotaQuantity - Model.holdModels[index].ReminingQuantity;
                     <tr>
                         <td>
-                            @Html.DisplayFor(model => Model.holdModels[index].territory.Name)
+                            @Html.DisplayFor(model => Model.holdModels[index].userId)
                         </td>
                         <td>
                             @assigned

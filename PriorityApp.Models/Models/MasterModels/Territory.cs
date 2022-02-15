@@ -16,6 +16,5 @@ namespace PriorityApp.Models.Models.MasterModels
         public int StateId { get; set; }
         [Required]
         public string userId { get; set; }
-       
     }
 }

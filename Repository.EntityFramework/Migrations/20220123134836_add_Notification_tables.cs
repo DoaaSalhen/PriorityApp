@@ -37,7 +37,7 @@ namespace Repository.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders_Notification",
+                name: "OrderNotification",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -68,12 +68,12 @@ namespace Repository.EntityFramework.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_Notification_OrderId",
-                table: "Orders_Notification",
+                table: "OrderNotification",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_Notification_submitNotificationId",
-                table: "Orders_Notification",
+                table: "OrderNotification",
                 column: "submitNotificationId");
         }
     }

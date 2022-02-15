@@ -8,23 +8,35 @@
     var user = await userManager.GetUserAsync(User);
     var roles = await userManager.GetRolesAsync(user);
 }
+<style>
 
+    .selectFilter {
+        margin-left: 40px;
+    }
+    .searchbtn {
+        margin: 20px 20px 20px 40px;
+        border-radius: 10px;
+        width: 200px;
+    }
+</style>
 <h3>Show Qouta</h3>
 
 <form asp-action="Search" method="post" asp-controller="Hold">
 
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-        <label class="control-label">Priority Date</label>
+    <div class="form-row" style="display:inline-block">
+        <label class="control-label" style="display:block; margin-bottom:5px;">Priority Date</label>
+        <input type="date" id="SelectedPriorityDate"  asp-for="PriorityDate" />
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 selectFilter" style="display:inline-block">
 
-        <input type="date" id="SelectedPriorityDate" asp-for="PriorityDate" />
-
-    </div>    <input type="submit" value="Search" />
+        <input type="submit" value="Search" class="btn btn-primary btn-lg searchbtn" style="margin:20px;" />
+        </div>
 </form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.territory.Name)
+                Salesman
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PriorityDate)
@@ -43,13 +55,14 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model != null)
+        @if (Model.holdModels != null)
         {
             @for (int index = 0; index < Model.holdModels.Count; index++)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(model => model.holdModels[index].territory.Name)
+                        @Html.DisplayFor(model => model.holdModels[index].UserName)
+                        <input class="form-check-input" asp-for="holdModels[index].userId" type="hidden" />
                     </td>
                     <td>
                         @Html.DisplayFor(model => model.holdModels[index].PriorityDate)
@@ -66,13 +79,13 @@
                     @if (!roles.Contains("Sales"))
                     {
                         <td>
-                            <a class="far fa-edit btn btn-success" asp-action="Edit" asp-route-territoryId="@Model.holdModels[index].territoryId" asp-route-PriorityDate="@Model.holdModels[index].PriorityDate">Edit</a>
+                            <a class="far fa-edit btn btn-success" asp-action="Edit" asp-route-userId="@Model.holdModels[index].userId" asp-route-PriorityDate="@Model.holdModels[index].PriorityDate">Edit</a>
                         </td>
                     }
                     else
                     {
                         <td>
-                            <a class="far fa-edit btn btn-success disabled" asp-action="" asp-route-territoryId="@Model.holdModels[index].territoryId" asp-route-PriorityDate="@Model.holdModels[index].PriorityDate">Edit</a>
+                            <a class="far fa-edit btn btn-success disabled" asp-action="" asp-route-territoryId="@Model.holdModels[index].userId" asp-route-PriorityDate="@Model.holdModels[index].PriorityDate">Edit</a>
                         </td>
                     }
 

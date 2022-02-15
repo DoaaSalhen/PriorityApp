@@ -1,4 +1,5 @@
-﻿using PriorityApp.Service.Models;
+﻿using PriorityApp.Models.Models.MasterModels;
+using PriorityApp.Service.Models;
 using PriorityApp.Service.Models.MasterModels;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,6 @@ namespace PriorityApp.Service.Contracts.Comman
         public MemoryStream ExportToExcel(List<OrderModel2> models);
 
         public MemoryStream WritePickUpTemplateToExcel(List<ItemModel> models, List<CustomerModel> customerModels);
+        public MemoryStream WritQuotaTemplateToExcel(List<AspNetUser> salesUsers);
     }
 }

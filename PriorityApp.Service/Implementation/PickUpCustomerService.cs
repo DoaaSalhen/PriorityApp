@@ -76,7 +76,7 @@ namespace PriorityApp.Service.Implementation
                     if (((double)row["Priority"] == (double)CommanData.Priorities.Norm || (double)row["Priority"] == (double)CommanData.Priorities.Extra) && (DateTime.Compare((DateTime)row["PriorityDate"], DateTime.Today) <=0))
                     {
                         CustomerModel customer = _deliveryCustomerService.GetDeliveryCustomer(Convert.ToInt64(customerNumber));
-                        var hold = _holdService.GetHold((DateTime)row["PriorityDate"], customer.zone.TerritoryId);
+                        var hold = _holdService.GetHold((DateTime)row["PriorityDate"], customer.zone.Territory.userId);
                         if(hold != null && customer != null)
                         {
                             for (int index = itemStartIndex; index < dt.Columns.Count; index++)

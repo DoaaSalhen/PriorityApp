@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.Extensions.Logging;
+using PriorityApp.Models.Models.MasterModels;
 using PriorityApp.Service.Contracts;
 using PriorityApp.Service.Contracts.Comman;
 using PriorityApp.Service.Models;
@@ -191,6 +192,49 @@ namespace PriorityApp.Service.Implementation.Comman
 
         }
 
+
+        public MemoryStream WritQuotaTemplateToExcel(List<AspNetUser> salesUsers)
+        {
+            try
+            {
+                DataTable dt = new DataTable("QuotaTemplate");
+
+                if (salesUsers != null)
+                {
+                    dt.Columns.AddRange(new DataColumn[4] { 
+                                            new DataColumn("Salesman"),
+                                            new DataColumn("Assigned"),
+                                            new DataColumn("Quota Date",System.Type.GetType("System.DateTime")),
+                                            new DataColumn("Tolerance"),
+                                           });
+                    
+                    foreach (var salesUser in salesUsers)
+                    {
+
+                        dt.Rows.Add(salesUser.UserName);
+                    }
+                }
+
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(dt);
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        wb.SaveAs(stream);
+                        return stream;
+                        //return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Grid.xlsx");
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+            }
+            return null;
+            // Area Customer Number Customer Name Order .	Ty Line    Item POD .	POD Alfa Name Address Zone State   Qty Priority    Comments Truck.	Status SubmitDate  SubmitTime
+
+        }
 
 
     }

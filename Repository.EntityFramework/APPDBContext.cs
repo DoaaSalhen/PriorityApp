@@ -43,7 +43,7 @@ namespace Repository.EntityFramework
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Hold>().HasKey(h => new { h.PriorityDate, h.territoryId });
+            modelBuilder.Entity<Hold>().HasKey(h => new { h.PriorityDate, h.userId });
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserNotification>().HasKey(u => new { u.userId, u.submitNotificationId });

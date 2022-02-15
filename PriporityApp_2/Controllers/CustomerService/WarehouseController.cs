@@ -82,22 +82,6 @@ namespace PriorityApp.Controllers.CustomerService
             _hub = hub;
         }
 
-        //CSDeliveryOrderController SDeliveryOrderController = new CSDeliveryOrderController(
-        //        _regionService,
-        //    _stateService,
-        //    _orderService,
-        //    _territoryService,
-        //    _zoneService,
-        //    _deliveryCustomerService,
-        //    _holdService,
-        //    _itemService,
-        //    _submitNotificationService,
-        //    _userNotificationService,
-        //    _userManager,
-        //    _excelService,
-        //    _logger,
-        //    _hub);
-
         // GET: WarehouseController
 
         public ActionResult AssignWarehouseOrder()
@@ -107,8 +91,6 @@ namespace PriorityApp.Controllers.CustomerService
                 WarehouseOrderModel warehouseOrderModel = new WarehouseOrderModel();
                 List<ItemModel> itemModels = new List<ItemModel>();
                 List<WarehouseModel2> warehouseModel2s = new List<WarehouseModel2>();
-
-
                 var subRegionModels = _regionService.GetAllISubRegions().Result;
                 subRegionModels.Insert(0, new SubRegionModel { Id = -1, Name = "select SubRegion" });
                 warehouseOrderModel.SubRegions = subRegionModels;
@@ -126,7 +108,6 @@ namespace PriorityApp.Controllers.CustomerService
                 return RedirectToAction("ERROR404");
                 _logger.LogError(e.ToString());
             }
-            //return View();
         }
 
         [HttpPost]
@@ -135,7 +116,8 @@ namespace PriorityApp.Controllers.CustomerService
         {
             try
             {
-                HoldModel holdModel = _holdService.GetHold(model.SelectedPriorityDate, model.TerritorySelectedId);
+                TerritoryModel territoryModel = _territoryService.GetTerritory(model.TerritorySelectedId);
+                HoldModel holdModel = _holdService.GetHold(model.SelectedPriorityDate, territoryModel.userId);
                 if (holdModel != null)
                 {
                     model.HoldModel = holdModel;
@@ -189,7 +171,8 @@ namespace PriorityApp.Controllers.CustomerService
                 int submitOderCount = 0;
                 AspNetUser applicationUser = await _userManager.GetUserAsync(User);
                 OrderModel2 orderModel2 = new OrderModel2();
-                var hold = _holdService.GetHold(model.HoldModel.PriorityDate, model.HoldModel.territoryId);
+                TerritoryModel territoryModel = _territoryService.GetTerritory(model.TerritorySelectedId);
+                var hold = _holdService.GetHold(model.HoldModel.PriorityDate, territoryModel.userId);
                 if (hold != null)
                 {
                     int lastSubmitNumber = _orderService.getLastSubmitNumberForToday(DateTime.Now);
@@ -231,21 +214,27 @@ namespace PriorityApp.Controllers.CustomerService
                             {
                                 enoughQuantity = false;
                             }
-                        }
-                        if(enoughQuantity)
-                        {
-                            foreach (var item in warehouseOrder.itemModels.Where(i => i.Quantity != 0))
+
+                            if (enoughQuantity)
                             {
-                                //if(item.Quantity != 0)
-                                //{
-                                orderModel2.ItemId = item.Id;
-                                orderModel2.PriorityQuantity = item.Quantity;
-                                hold.ReminingQuantity = hold.ReminingQuantity - item.Quantity;
-                                hold.TempReminingQuantity = hold.TempReminingQuantity - item.Quantity;
-                                addResult = await _orderService.CreateOrder(orderModel2, hold);
-                                submitOderCount = addResult == true ? submitOderCount++ : submitOderCount;
+                                foreach (var item in warehouseOrder.itemModels.Where(i => i.Quantity != 0))
+                                {
+                                    //if(item.Quantity != 0)
+                                    //{
+                                    orderModel2.ItemId = item.Id;
+                                    orderModel2.PriorityQuantity = item.Quantity;
+                                    hold.ReminingQuantity = hold.ReminingQuantity - item.Quantity;
+                                    hold.TempReminingQuantity = hold.TempReminingQuantity - item.Quantity;
+                                    addResult = await _orderService.CreateOrder(orderModel2, hold);
+                                    submitOderCount = addResult == true ? submitOderCount++ : submitOderCount;
+                                }
                             }
-                        }     
+                        }
+                        else if(warehouseOrder.PrioritySelectedId ==4)
+                        {
+                            addResult = await _orderService.CreateOrder(orderModel2);
+
+                        }
                         
                     }
                     if (addResult)
@@ -299,25 +288,9 @@ namespace PriorityApp.Controllers.CustomerService
         {
             var subject = "test mail";
             var body = "new order submit";
-            await _emailSender.SendEmailAsync(toAddress, subject, body);
+            //await _emailSender.SendEmailAsync(toAddress, subject, body);
             return View();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

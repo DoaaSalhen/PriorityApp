@@ -80,7 +80,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                var territory = _repository.Find(i => i.Id == id && i.IsVisible == true);
+                Territory territory = _repository.Find(i => i.Id == id && i.IsVisible == true, false).First();
                 TerritoryModel model = _mapper.Map<TerritoryModel>(territory);
                 return model;
             }

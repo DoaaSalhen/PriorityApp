@@ -107,7 +107,7 @@ namespace PriorityApp.Controllers.CustomerService
                 geoFilterModel.Items = itemModels;
                 geoFilterModel.ItemSelectedId = -1;
 
-                geoFilterModel.SubRegions = subRegionModels;
+                //geoFilterModel.SubRegions = subRegionModels;
 
                 geoFilterModel.SelectedPriorityDate = DateTime.Today;
 
@@ -237,11 +237,12 @@ namespace PriorityApp.Controllers.CustomerService
                 Model.OrderModel.orders = orderModels;
                 Model.Customers = customerModels;
                 Model.Priorities = _priorityService.GetAllPriorities().Result.ToList();
-                Model.HoldModel = _holdService.GetHold(Model.SelectedPriorityDate.Date, Model.TerritorySelectedId);
+                TerritoryModel territoryModel = _territoryService.GetTerritory(Model.TerritorySelectedId);
+                Model.HoldModel = _holdService.GetHold(Model.SelectedPriorityDate.Date, territoryModel.userId);
                 Model.OrderModel.holdModel = Model.HoldModel;
 
                 Model.SubRegions = _regionService.GetAllISubRegions().Result;
-                Model.SubRegionSelectedId = -1;
+                //Model.SubRegionSelectedId = -1;
 
                 Model.SubRegions.Insert(0, new Service.Models.MasterModels.SubRegionModel { Id = -1, Name = "Select Region" });
                 Model.States = _stateService.GetStatesBySubRegionId(Model.SubRegionSelectedId).Result;
@@ -253,8 +254,6 @@ namespace PriorityApp.Controllers.CustomerService
                 itemModels.Insert(0, new ItemModel { Id = -1, Name = "All" });
                 Model.Items = itemModels;
                 Model.ItemSelectedId = -1;
-
-
 
                 if (Model.orderType == (int)CommanData.OrderCategory.Delivery)
                 {
@@ -289,7 +288,7 @@ namespace PriorityApp.Controllers.CustomerService
                 {
 
                     OrderModel2 updateModel = _orderService.GetOrder((long)orderModel.Id);
-                    HoldModel DBholdModel = _holdService.GetHold(Model.HoldModel.PriorityDate, Model.HoldModel.territoryId);
+                    HoldModel DBholdModel = _holdService.GetHold(Model.HoldModel.PriorityDate, Model.HoldModel.userId);
                     
                    if(orderModel.SavedBefore == true)
                     {
@@ -320,6 +319,7 @@ namespace PriorityApp.Controllers.CustomerService
                     updateModel.SavedBefore = true;
                     updateModel.WHSavedID = applicationUser.Id;
                     updateModel.Comment = orderModel.Comment;
+                    updateModel.Truck = orderModel.Truck;
                     updateModel.OrderCategoryId = Model.orderType;
                    
                     updateOrderResult = _orderService.UpdateOrder2(updateModel,DBholdModel).Result;
@@ -331,9 +331,6 @@ namespace PriorityApp.Controllers.CustomerService
                     {
                         AllOrdersSaved = false;
                     }
-
-
-                    //}
                 }
                 TempData["SubmittedOrdersCount"] = SavedOrderCount;
                 if (Model.orderType == (int)CommanData.OrderCategory.Delivery)
@@ -373,6 +370,7 @@ namespace PriorityApp.Controllers.CustomerService
                 SubmittInfo info = new SubmittInfo();
                 info.holdModels = new List<HoldModel>();
                 List<SubmittedOrdersTerritories> submittedOrdersTerritories = new List<SubmittedOrdersTerritories>();
+                //var unsubmittedOrdersGroup = unSubmittedOrders.GroupBy(o => o.Customer.zone.Territory.userId).ToList();
                 foreach (var territoryModel in territoryModels)
                 {
                     SubmittedOrdersTerritories item = new SubmittedOrdersTerritories();
@@ -381,8 +379,14 @@ namespace PriorityApp.Controllers.CustomerService
                 }
                 foreach (var order in unSubmittedOrders)
                 {
-                   info.holdModels .Add(_holdService.GetHold(order.PriorityDate, order.Customer.zone.TerritoryId));
+                    HoldModel holdModel = _holdService.GetHold(order.PriorityDate, order.Customer.zone.Territory.userId);
+                    holdModel.userId = _userManager.FindByIdAsync(order.Customer.zone.Territory.userId).Result.UserName;
+                    info.holdModels.Add(holdModel);
                 }
+
+                info.holdModels = info.holdModels.GroupBy(h=>h.PriorityDate).Select(h => h.First()).ToList();
+
+                //info.holdModels = info.holdModels.Distinct<HoldModel>().ToList();
                 info.ordersTosubmit = unSubmittedOrders;
                 info.submittedOrdersTerritories = submittedOrdersTerritories;
                 info.OrdersCount = unSubmittedOrders.Count();
@@ -481,9 +485,8 @@ namespace PriorityApp.Controllers.CustomerService
                     }
                    //List<SubmitNotificationModel> submitNotificationModels = _submitNotificationService.GetUnseenNotifications();
                     await _hub.Clients.All.SendAsync("SubmitNotification", "you have New submitted  orders", 1, NewsubmitNotificationModel.Id);
-                   var testMail = await Send("doaa.abdel@ext.cemex.com");
+                   var testMail = await Send("");
                     return RedirectToAction("Index");
-
                 }
             }
             catch (Exception e)
@@ -550,8 +553,6 @@ namespace PriorityApp.Controllers.CustomerService
                 List<OrderModel2> orderModels = new List<OrderModel2>();
                 List<CustomerModel> customerModels = new List<CustomerModel>();
                 DateTime selectedPriorityDate = Model.SelectedPriorityDate.Date;
-                //AspNetUser applicationUser = _userManager.GetUserAsync(User).Result;
-                ////List<string> roles = (List<string>)_userManager.GetRolesAsync(applicationUser).Result;
 
                 if (Model.ZoneSelectedId != -1)
                 {
@@ -579,7 +580,8 @@ namespace PriorityApp.Controllers.CustomerService
                     orderModels = orderModels.Where(o => o.ItemId == Model.ItemSelectedId).ToList();
                 }
                 Model.ordersQuantitySum = (float)orderModels.Sum(o => o.PriorityQuantity);
-                Model.HoldModel = _holdService.GetHold(Model.SelectedPriorityDate, Model.TerritorySelectedId);
+                TerritoryModel territoryModel = _territoryService.GetTerritory(Model.TerritorySelectedId);
+                Model.HoldModel = _holdService.GetHold(Model.SelectedPriorityDate.Date, territoryModel.userId);
                 Model.OrderModel = new OrderModel();
                 Model.OrderModel.orders = orderModels;
                 Model.Customers = customerModels;
@@ -603,15 +605,6 @@ namespace PriorityApp.Controllers.CustomerService
                     return View("ShowPickupSubmittedOrders", Model);
 
                 }
-                //if (Model.orderType == (int)CommanData.OrderCategory.Delivery)
-                //{
-                //    return View("ShowSubmittedOrders", Model);
-                //}
-                //else
-                //{
-                //    return View("ShowPickupSubmittedOrders", Model);
-
-                //}
             }
             catch(Exception e)
             {

@@ -10,10 +10,10 @@ namespace PriorityApp.Models.Models
     {
         [Key]
         public DateTime  PriorityDate{ get; set; }
-
         [Key]
-        public Territory territory { get; set; }
-        public int     territoryId { get; set; }
+        public string userId { get; set; }
+        //public Territory territory { get; set; }
+        //public int     territoryId { get; set; }
         public float     QuotaQuantity { get; set; }
 
         public float     ReminingQuantity { get; set; }

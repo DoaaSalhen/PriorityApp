@@ -202,7 +202,8 @@ namespace PriorityApp.Controllers.CustomerService
                 }
                 Model.pickUpOrders = pickUpOrders;
 
-                Model.HoldModel = _holdService.GetHold(Model.SelectedPriorityDate.Date, Model.TerritorySelectedId);
+                TerritoryModel territoryModel = _territoryService.GetTerritory(Model.TerritorySelectedId);
+                Model.HoldModel = _holdService.GetHold(Model.SelectedPriorityDate.Date, territoryModel.userId);
 
                 Model.SubRegions = _regionService.GetAllISubRegions().Result;
 
@@ -457,7 +458,7 @@ namespace PriorityApp.Controllers.CustomerService
             {
                 CustomerModel customerModel = _deliveryCustomerService.GetDeliveryCustomer(customerNumber);
                 ZoneModel zoneModel = _zoneService.GetZone(customerModel.ZoneId);
-                HoldModel holdModel = _holdService.GetHold(priorityDate, zoneModel.TerritoryId);
+                HoldModel holdModel = _holdService.GetHold(priorityDate, zoneModel.Territory.userId);
                 return holdModel;
                
             }
@@ -592,9 +593,10 @@ namespace PriorityApp.Controllers.CustomerService
             }
             catch(Exception e)
             {
+                return RedirectToAction("ERROR404");
                 _logger.LogError(e.ToString());
             }
-            return null;
+            //return null;
         }
 
 

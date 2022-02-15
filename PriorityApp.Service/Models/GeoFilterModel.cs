@@ -29,7 +29,7 @@ namespace PriorityApp.Service.Models
         public int TerritorySelectedId { get; set; }
         public int ZoneSelectedId { get; set; }
         public long CustomerSelectedId { get; set; }
-
+        //public string holdUserId { get; set; }
         public List<DispatchCaseModel> DispatchCases { get; set; }
         public int DispatchCaseSelectedId { get; set; }
         

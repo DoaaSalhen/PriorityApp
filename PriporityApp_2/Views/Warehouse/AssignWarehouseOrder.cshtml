@@ -74,7 +74,7 @@
             var ddlsource = "#SubRegionSelectedId";
             var items = '';
             if ($(ddlsource).val() != -1) {
-                var url = '@Url.Content("~/")' + "CSDeliveryOrder/StateFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/CSDeliveryOrder/StateFilter";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     $('#StateSelectedId').empty();
                     $.each(data, function (i, state) {
@@ -95,7 +95,7 @@
 
             var items = '';
             if ($(ddlsource).val() != -1) {
-                var url = '@Url.Content("~/")' + "CSDeliveryOrder/TerritoryFilter";
+                var url = '@Url.Content("~/")' + "PriorityTool/CSDeliveryOrder/TerritoryFilter";
                 $.getJSON(url, { id: $(ddlsource).val() }, function (data) {
                     $('#TerritorySelectedId').empty();
                     $.each(data, function (i, territory) {
@@ -445,7 +445,7 @@
             <input class="form-check-input" asp-for="HoldModel.QuotaQuantity" type="hidden" style="width:100px" />
             <input id="calculatedRemainingQuantity" class="form-check-input" asp-for="HoldModel.ReminingQuantity" type="hidden" style="width:100px" />
             @Html.Hidden("test", Model.HoldModel.ReminingQuantity)
-            <input class="form-check-input" asp-for="HoldModel.territoryId" type="hidden" style="width:100px" />
+            <input class="form-check-input" asp-for="HoldModel.userId" type="hidden" style="width:100px" />
             <input class="form-check-input" asp-for="HoldModel.PriorityDate" type="hidden" style="width:100px" />
 
         </tr>

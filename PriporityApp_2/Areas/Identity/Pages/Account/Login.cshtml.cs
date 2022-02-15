@@ -75,7 +75,6 @@ namespace authtest.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            //returnUrl = returnUrl ?? Url.Content("~/item/create");
             returnUrl = Url.Content("~/PriorityTool/item/create");
 
             if (ModelState.IsValid)
@@ -86,14 +85,6 @@ namespace authtest.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    //return RedirectToAction("index", "Item");
-                    //var user = await _userManager.getu
-                    //SignInManager<AspNetUser> SignInManager;
-                    //var claimsIdentity = (ClaimsIdentity)User.Identity;
-                    //var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                    //var userId = claim.Value;
-
-                    //var user = await _userManager.GetUserAsync(User);
                     var user = await _userManager.FindByNameAsync(Input.Email);
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))

@@ -247,8 +247,8 @@ body {
 
 /* ===================================== Login Page Design CSS ==================================== */
 .form-login-body {
-  background-image: url(../images/bg.jpg);
-  background-size: cover; }
+/*  background-image: url(../images/bg.jpg);
+*/  background-size: cover; }
   @media screen and (max-width: 991px) {
     .form-login-body {
       padding-left: 30px;

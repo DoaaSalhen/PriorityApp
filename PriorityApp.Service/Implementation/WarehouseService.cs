@@ -52,7 +52,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                var warehouses = _repository.GetAll().ToList();
+                List<Warehouse> warehouses = _repository.Find(w=>w.IsVisible==true,false,w=>w.State).ToList();
                 var models = new List<WarehouseModel>();
                 models = _mapper.Map<List<WarehouseModel>>(warehouses);
                 return models;

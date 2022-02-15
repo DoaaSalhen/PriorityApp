@@ -15,6 +15,9 @@ using PriorityApp.Service.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using PriporityApp_2.Controllers;
+using PriorityApp.Service.Models.MasterModels;
+using Microsoft.AspNetCore.Identity;
+using PriorityApp.Models.Models.MasterModels;
 
 namespace PriorityApp.Controllers.CustomerService
 {
@@ -27,48 +30,72 @@ namespace PriorityApp.Controllers.CustomerService
         private readonly IConfiguration _configuration;
         private readonly IHoldService _holdService;
         private readonly IExcelService _excelService;
+        private readonly ITerritoryService _territoryService;
+        private readonly UserManager<AspNetUser> _userManager;
 
         public HoldController(ILogger<HoldController> logger,
             IWebHostEnvironment environment,
             IConfiguration configuration,
             IHoldService holdService,
-            IExcelService excelService)
+            IExcelService excelService,
+            ITerritoryService territoryService,
+             UserManager<AspNetUser> userManager)
         {
             _logger = logger;
             _environment = environment;
             _configuration = configuration;
             _holdService = holdService;
             _excelService = excelService;
+            _territoryService = territoryService;
+            _userManager = userManager;
         }
         [Authorize(Roles = "SuperAdmin, Admin, CustomerService, Sales")]
         // GET: HoldController
         public ActionResult Index()
         {
-            
-            return View();
+            HoldModel holdModel = new HoldModel();
+            holdModel.PriorityDate = DateTime.Today;
+            return View(holdModel);
         }
         [Authorize(Roles = "SuperAdmin, Admin, CustomerService, Sales")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Search(params DateTime[] priorityDate)
         {
-            List<HoldModel> holdmodels = new List<HoldModel>();
-            HoldModel holdModel = new HoldModel();
-            if (ViewData["SearchPriorityDate"] != null)
+            try
             {
-                holdmodels = _holdService.GetHoldBypriorityDate((DateTime)ViewData["SearchPriorityDate"]);
-                holdModel.holdModels = holdmodels;
-                holdModel.PriorityDate = (DateTime) ViewData["SearchPriorityDate"];
+                List<HoldModel> holdmodels = new List<HoldModel>();
+                HoldModel holdModel = new HoldModel();
+                if (ViewData["SearchPriorityDate"] != null)
+                {
+                    holdmodels = _holdService.GetHoldBypriorityDate((DateTime)ViewData["SearchPriorityDate"]);
+                    foreach (var model in holdmodels)
+                    {
+                        model.UserName = _userManager.FindByIdAsync(model.userId).Result.UserName;
+                    }
+                    holdModel.holdModels = holdmodels;
 
+                    holdModel.PriorityDate = (DateTime)ViewData["SearchPriorityDate"];
+
+                }
+                else
+                {
+                    holdmodels = _holdService.GetHoldBypriorityDate(priorityDate[0]);
+                    foreach (var model in holdmodels)
+                    {
+                        model.UserName = _userManager.FindByIdAsync(model.userId).Result.UserName;
+                    }
+                    holdModel.holdModels = holdmodels;
+                    holdModel.PriorityDate = priorityDate[0];
+                }
+
+                return View("index", holdModel);
             }
-            else
+            catch(Exception e)
             {
-                holdmodels = _holdService.GetHoldBypriorityDate(priorityDate[0]);
-                holdModel.holdModels = holdmodels;
-                holdModel.PriorityDate = priorityDate[0];
+                return RedirectToAction("ERROR404");
             }
-
-            return View("index", holdModel);
+            
         }
 
         // GET: HoldController/Details/5
@@ -82,6 +109,28 @@ namespace PriorityApp.Controllers.CustomerService
         {
             return View();
         }
+
+        [Authorize(Roles = "SuperAdmin, Admin, CustomerService")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DownloadQuotaTemplate()
+        {
+            MemoryStream memoryStream;
+
+            try
+            {
+                //List<TerritoryModel> territoryModels = _territoryService.GetAllTeritories().Result.ToList();
+                List < AspNetUser> salesUsers= _userManager.GetUsersInRoleAsync("Sales").Result.ToList();
+                memoryStream = _excelService.WritQuotaTemplateToExcel(salesUsers);
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "QuotaTemplate.xlsx");
+            }
+            catch(Exception e)
+            {
+                return RedirectToAction("ERROR404");
+            }
+        }
+
+
         [Authorize(Roles = "SuperAdmin, Admin, CustomerService")]
         // POST: HoldController/Create
         [HttpPost]
@@ -120,6 +169,11 @@ namespace PriorityApp.Controllers.CustomerService
                         {
                             return RedirectToAction("index");
                         }
+                        else
+                        {
+                            return RedirectToAction("ERROR404");
+
+                        }
                     }
 
                 }
@@ -127,14 +181,15 @@ namespace PriorityApp.Controllers.CustomerService
             }
             catch (Exception e)
             {
-                return RedirectToAction("ERROR404");;
+                return RedirectToAction("ERROR404");
             }
         }
         [Authorize(Roles = "SuperAdmin, Admin, CustomerService")]
         // GET: HoldController/Edit/5
-        public ActionResult Edit(DateTime? PriorityDate, int territoryId)
+        public ActionResult Edit(DateTime? PriorityDate, string userId)
         {
-            HoldModel model = _holdService.GetHold(PriorityDate, territoryId);
+            HoldModel model = _holdService.GetHold(PriorityDate, userId);
+            model.UserName = _userManager.FindByIdAsync(model.userId).Result.UserName;
             return View(model);
         }
 

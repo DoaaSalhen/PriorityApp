@@ -68,7 +68,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                Zone zone = _repository.Find(z => z.Id == id && z.IsVisible == true).First();
+                Zone zone = _repository.Find(z => z.Id == id && z.IsVisible == true, false, z=>z.Territory).First();
                 ZoneModel zoneModel = _mapper.Map<ZoneModel>(zone);
                 return zoneModel;
             }

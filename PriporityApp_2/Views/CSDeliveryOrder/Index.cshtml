@@ -127,7 +127,6 @@
             else
             {
                 $('#ZoneSelectedId').html(zoneItems);
-
             }
         });
 
@@ -172,7 +171,6 @@
                     AssignedValuesArray[index] = 0;
 
                  }
-                //alert(SavedValuesArray[index]);
                 totalQuantity = AssignedValuesArray.reduce(function (a, b) { return parseFloat(a) + parseFloat(b); });
                 var totalCheckResult = checkTotalQuantityVsHoldRemainingQuantity(tempholdReminingQuantity3, totalQuantity);
                 if (totalCheckResult == false) {
@@ -187,8 +185,6 @@
         }
         else {
             alert("please you must select priority");
-            //resetIfFalse(priorityQuantityId, radioButtonListId);
-
         }
 
     }
@@ -557,7 +553,7 @@
                             <input class="form-check-input" asp-for="OrderModel.orders[index].SavedBefore" type="hidden" />
                             <input class="form-check-input" asp-for="HoldModel.PriorityDate" type="hidden" style="width:100px" />
 
-                            <input class="form-check-input" asp-for="HoldModel.territoryId" type="hidden" style="width:100px" />
+                            <input class="form-check-input" asp-for="HoldModel.userId" type="hidden" style="width:100px" />
                             <input class="form-check-input" asp-for="HoldModel.PriorityDate" type="hidden" style="width:100px" />
 
                             <input class="form-check-input" asp-for="HoldModel.QuotaQuantity" type="hidden" style="width:100px" />

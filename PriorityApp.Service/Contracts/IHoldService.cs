@@ -11,11 +11,11 @@ namespace PriorityApp.Service.Contracts
     {
         Task<List<HoldModel>> GetAllHolds();
         Task<bool> CreateHold(HoldModel model);
-        HoldModel GetHold(DateTime? priorityDate, int? territoryId);
+        HoldModel GetHold(DateTime? priorityDate, string? userId);
 
         List<HoldModel> GetHoldBypriorityDate(DateTime? priorityDate);
 
-        List<HoldModel> GetLastHoldByTerritoryId(int? territoryId);
+        List<HoldModel> GetLastHoldByUserId(string? userId);
         Task<bool> UpdateHold(HoldModel model);
 
         bool AddQuotaFile(DataTable dt, string SqlConnectionString);
