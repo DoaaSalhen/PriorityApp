@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PriorityApp.Controllers.Auth
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "Admin")]
     public class RoleController : BaseController
     {
         private readonly IRoleService _roleService;
