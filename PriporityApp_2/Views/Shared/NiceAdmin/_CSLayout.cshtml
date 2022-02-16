@@ -16,7 +16,7 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        <title>Dashboard - NiceAdmin Bootstrap Template</title>
+        <title>Priority Tool</title>
         <meta content="" name="description">
         <meta content="" name="keywords">
 
@@ -104,7 +104,7 @@
                                 <hr class="dropdown-divider">
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="/Identity/Account/Login">
+                                <a class="dropdown-item d-flex align-items-center" href="~/Identity/Account/Login">
                                     <i class="bi bi-box-arrow-right"></i>
                                     <span>log Out</span>
                                 </a>
@@ -145,7 +145,7 @@
                             @if (roles.Contains("CustomerService") || roles.Contains("Admin"))
                             {
                                 <li>
-                                    <a href="/PriorityTool/CSDeliveryOrder/Index">
+                                    <a href="~/PriorityTool/CSDeliveryOrder/Index">
                                         <i class="bi bi-circle"></i><span>Assign Orders</span>
                                     </a>
                                 </li>
@@ -153,13 +153,13 @@
                             else if (roles.Contains("Sales"))
                             {
                                 <li>
-                                    <a href="/PriorityTool/Order/Index">
+                                    <a href="~/PriorityTool/Order/Index">
                                         <i class="bi bi-circle"></i><span>Assign Orders</span>
                                     </a>
                                 </li>
                             }
                             <li>
-                                <a href="/PriorityTool/CSDeliveryOrder/ShowSubmittedOrders">
+                                <a href="~/PriorityTool/CSDeliveryOrder/ShowSubmittedOrders">
                                     <i class="bi bi-circle"></i><span>Show Submitted orders</span>
                                 </a>
                             </li>
@@ -172,17 +172,17 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/PickUpOrders/AddPickupOrders">
+                                <a href="~/PriorityTool/PickUpOrders/AddPickupOrders">
                                     <i class="bi bi-circle"></i><span>upload PickUp Orders</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/CSDeliveryOrder/ShowPickupSubmittedOrders">
+                                <a href="~/PriorityTool/CSDeliveryOrder/ShowPickupSubmittedOrders">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/PickUpOrders/EditPickUpOrders
+                                <a href="~/PriorityTool/PickUpOrders/EditPickUpOrders
 ">
                                     <i class="bi bi-circle"></i><span>Edit</span>
                                 </a>
@@ -196,7 +196,7 @@
                         </a>
                         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/Warehouse/AssignWarehouseOrder">
+                                <a href="~/PriorityTool/Warehouse/AssignWarehouseOrder">
                                     <i class="bi bi-circle"></i><span>AddQuantity</span>
                                 </a>
                             </li>
@@ -212,14 +212,14 @@
                             @if (roles.Contains("CustomerService") || roles.Contains("Admin"))
                             {
                                 <li>
-                                    <a href="/PriorityTool/Hold/Create">
+                                    <a href="~/PriorityTool/Hold/Create">
                                         <i class="bi bi-circle"></i><span>Upload Quota File </span>
                                     </a>
                                 </li>
                             }
 
                             <li>
-                                <a href="/PriorityTool/Hold/Index">
+                                <a href="~/PriorityTool/Hold/Index">
                                     <i class="bi bi-circle"></i><span>Show Quota </span>
                                 </a>
                             </li>
@@ -233,7 +233,7 @@
                         </a>
                         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/ExportOrders/Index">
+                                <a href="~/PriorityTool/ExportOrders/Index">
                                     <i class="bi bi-circle"></i><span>Export Orders File</span>
                                 </a>
                             </li>
@@ -250,7 +250,7 @@
                         </a>
                         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/Dispatch/Index">
+                                <a href="~/PriorityTool/Dispatch/Index">
                                     <i class="bi bi-circle"></i><span>Show Orders</span>
                                 </a>
                             </li>
@@ -262,7 +262,7 @@
                         </a>
                         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/ExportOrders/Index">
+                                <a href="~/PriorityTool/ExportOrders/Index">
                                     <i class="bi bi-circle"></i><span>Export Orders File</span>
                                 </a>
                             </li>
@@ -278,12 +278,12 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/Item/Index">
+                                <a href="~/PriorityTool/Item/Index">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/Item/Create">
+                                <a href="~/PriorityTool/Item/Create">
                                     <i class="bi bi-circle"></i><span>Add</span>
                                 </a>
                             </li>
@@ -295,12 +295,12 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/MainRegion/Index">
+                                <a href="~/PriorityTool/MainRegion/Index">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/MainRegion/Create">
+                                <a href="~/PriorityTool/MainRegion/Create">
                                     <i class="bi bi-circle"></i><span>Add</span>
                                 </a>
                             </li>
@@ -314,12 +314,12 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/SubRegion/Index">
+                                <a href="~/PriorityTool/SubRegion/Index">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/SubRegion/Create">
+                                <a href="~/PriorityTool/SubRegion/Create">
                                     <i class="bi bi-circle"></i><span>Add</span>
                                 </a>
                             </li>
@@ -331,12 +331,12 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/State/Index">
+                                <a href="~/PriorityTool/State/Index">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/State/Create">
+                                <a href="~/PriorityTool/State/Create">
                                     <i class="bi bi-circle"></i><span>Add</span>
                                 </a>
                             </li>
@@ -349,12 +349,12 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/Territory/Index">
+                                <a href="~/PriorityTool/Territory/Index">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/Territory/Create">
+                                <a href="~/PriorityTool/Territory/Create">
                                     <i class="bi bi-circle"></i><span>Add</span>
                                 </a>
                             </li>
@@ -367,12 +367,12 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/Zone/Index">
+                                <a href="~/PriorityTool/Zone/Index">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/Zone/Create">
+                                <a href="~/PriorityTool/Zone/Create">
                                     <i class="bi bi-circle"></i><span>Add</span>
                                 </a>
                             </li>
@@ -384,12 +384,12 @@
                         </a>
                         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="/PriorityTool/DeliveryCustomer/Index">
+                                <a href="~/PriorityTool/DeliveryCustomer/Index">
                                     <i class="bi bi-circle"></i><span>Show</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/PriorityTool/DeliveryCustomer/Create">
+                                <a href="~/PriorityTool/DeliveryCustomer/Create">
                                     <i class="bi bi-circle"></i><span>Add</span>
                                 </a>
                             </li>
