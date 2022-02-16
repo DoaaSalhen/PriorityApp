@@ -259,7 +259,7 @@ namespace PriorityApp.Service.Implementation
                     }
                     else
                     {
-                        LastSubmitNumber = SubmitNumber;
+                        LastSubmitNumber = (int) SubmitNumber;
                     }
                 }
                 else

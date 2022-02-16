@@ -32,7 +32,7 @@ namespace PriorityApp.Models.Models
         public long?       ItemId { get; set; }
         public Item      Item { get; set; }
         //POD data
-        public long    PODNumber { get; set; }
+        public long?    PODNumber { get; set; }
         public string    PODName { get; set; }
         public string    PODZoneName { get; set; }
         public string    PODZoneState { get; set; }
@@ -49,7 +49,7 @@ namespace PriorityApp.Models.Models
 
         public string    Status { get; set; }
 
-        public int SubmitNumber { get; set; }
+        public int?  SubmitNumber { get; set; }
 
         public bool?     SavedBefore { get; set; }
         public bool?      Submitted { get; set; }
