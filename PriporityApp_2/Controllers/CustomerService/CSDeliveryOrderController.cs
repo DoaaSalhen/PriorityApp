@@ -225,7 +225,7 @@ namespace PriorityApp.Controllers.CustomerService
                 }
                 else if (Model.orderType == (int)CommanData.OrderCategory.Pickup && Model.viewCase == "edit")
                 {
-                    orderModels = orderModels = _orderService.GetOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o=>o.OrderCategoryId == Model.orderType && o.Submitted == false).ToList();
+                    orderModels = _orderService.GetOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o=>o.OrderCategoryId == Model.orderType && o.Submitted == false).ToList();
                 }
                 if (Model.ItemSelectedId != -1)
                 {
@@ -485,7 +485,7 @@ namespace PriorityApp.Controllers.CustomerService
                     }
                    //List<SubmitNotificationModel> submitNotificationModels = _submitNotificationService.GetUnseenNotifications();
                     await _hub.Clients.All.SendAsync("SubmitNotification", "you have New submitted  orders", 1, NewsubmitNotificationModel.Id);
-                   var testMail = await Send("");
+                  // var testMail = await Send("");
                     return RedirectToAction("Index");
                 }
             }

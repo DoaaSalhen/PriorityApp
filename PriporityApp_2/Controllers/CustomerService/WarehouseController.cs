@@ -147,7 +147,7 @@ namespace PriorityApp.Controllers.CustomerService
                 }
                 else
                 {
-                    return View();
+                    return RedirectToAction("ERROR404");
                 }
             }
             catch(Exception e)
@@ -259,24 +259,15 @@ namespace PriorityApp.Controllers.CustomerService
                                 userNotificationModels.Add(userNotificationModel);
                             }
                             await _userNotificationService.CreateUserNotification(userNotificationModels);
-                            //foreach (var id in submittedOrderIdsList)
-                            //{
-                            //    OrderNotificationModel orderNotificationModel = new OrderNotificationModel();
-                            //    orderNotificationModel.submitNotificationId = NewsubmitNotificationModel.Id;
-                            //    orderNotificationModel.OrderId = id;
-                            //    orderNotificationModel.CreatedDate = DateTime.Now;
-                            //    orderNotificationModel.UpdatedDate = DateTime.Now;
-                            //    bool addOrderNotification = _submitNotificationService.CreateOrderNotification(orderNotificationModel).Result;
 
-                            //}
                         }
                         //List<SubmitNotificationModel> submitNotificationModels = _submitNotificationService.GetUnseenNotifications();
                         await _hub.Clients.All.SendAsync("SubmitNotification", "There are new submitted  orders", 1, NewsubmitNotificationModel.Id);
-                        var testMail = await Send("doaa.abdel@ext.cemex.com");
+                       // var testMail = await Send("doaa.abdel@ext.cemex.com");
                     }
 
                 }
-                return View("AssignWarehouseOrder");
+                return RedirectToAction("AssignWarehouseOrder");
             }
             catch(Exception e)
             {

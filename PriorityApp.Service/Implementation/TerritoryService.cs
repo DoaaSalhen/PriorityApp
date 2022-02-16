@@ -62,7 +62,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                var territories = _repository.Find(i => i.IsVisible == true).ToList();
+                var territories = _repository.Find(t => t.IsDelted == false && t.IsVisible == true).ToList();
                 var models = new List<TerritoryModel>();
                 models = _mapper.Map<List<TerritoryModel>>(territories);
                 return models;
@@ -110,7 +110,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                List<int> territoryIds = _repository.Find(t => t.StateId == StateId).Select(t => t.Id).ToList();
+                List<int> territoryIds = _repository.Find(t => t.StateId == StateId && t.IsDelted==false && t.IsVisible==true).Select(t => t.Id).ToList();
                 
                 return territoryIds;
             }
@@ -125,7 +125,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                List<Territory> territories = _repository.Find(t => t.StateId == StateId).ToList();
+                List<Territory> territories = _repository.Find(t => t.StateId == StateId && t.IsDelted == false && t.IsVisible == true).ToList();
                 List<TerritoryModel> territoryModels = new List<TerritoryModel>();
                 territoryModels = _mapper.Map<List<TerritoryModel>>(territories);
                 return territoryModels;
@@ -158,7 +158,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                var territories = _repository.Findlist().Result.Where(t => StateIds.Contains(t.StateId));
+                var territories = _repository.Findlist().Result.Where(t => StateIds.Contains(t.StateId) && t.IsDelted == false && t.IsVisible == true);
                 var models = new List<TerritoryModel>();
                 models = _mapper.Map<List<TerritoryModel>>(territories);
                 return models;
