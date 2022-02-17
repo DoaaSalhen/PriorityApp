@@ -188,29 +188,33 @@ namespace PriorityApp.Service.Implementation.CustomerService
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    row["OrderCategoryId"] =(int) CommanData.OrderCategory.Delivery;
-                    string z = row["QNTY"].ToString();
-                    var customerNumber = row["SDPA8"];
-                    if (row["STATUS"].ToString() == "Cancelled")
+                    var customerNumber = row[21];
+                    if (customerNumber.ToString() != "")
                     {
-                        row.Delete();
-                    }
-                    else if (z == "1")
-                    {
-                        row.Delete();
-                    }
-                    else if (row["ABAC02"].ToString() == "EG04")
-                    {
-                        row["ABAC02"] = 2;
-                    }
-                    else if (row["ABAC02"].ToString() == "EG01" || row["ABAC02"].ToString() == "EG02" || row["ABAC02"].ToString() == "EG03")
-                    {
-                        row["ABAC02"] = 1;
-                    }
-                    if (customerNumber.ToString().Contains("P"))
-                    {
-                        customerNumber = customerNumber.ToString().Replace("P", "1");
-                        row["SDPA8"] = Convert.ToInt64(customerNumber);
+                        row["OrderCategoryId"] = (int)CommanData.OrderCategory.Delivery;
+                        string z = row["QNTY"].ToString();
+                       // var customerNumber = row["SDPA8"];
+                        if (row["STATUS"].ToString() == "Cancelled")
+                        {
+                            row.Delete();
+                        }
+                        else if (z == "1")
+                        {
+                            row.Delete();
+                        }
+                        else if (row["ABAC02"].ToString() == "EG04")
+                        {
+                            row["ABAC02"] = 2;
+                        }
+                        else if (row["ABAC02"].ToString() == "EG01" || row["ABAC02"].ToString() == "EG02" || row["ABAC02"].ToString() == "EG03")
+                        {
+                            row["ABAC02"] = 1;
+                        }
+                        if (customerNumber.ToString().Contains("P"))
+                        {
+                            customerNumber = customerNumber.ToString().Replace("P", "1");
+                            row["SDPA8"] = Convert.ToInt64(customerNumber);
+                        }
                     }
                 }
                 ////////////////////////////// replace ZoneCode by zoneId

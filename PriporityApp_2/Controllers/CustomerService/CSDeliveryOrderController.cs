@@ -485,7 +485,7 @@ namespace PriorityApp.Controllers.CustomerService
                     }
                    //List<SubmitNotificationModel> submitNotificationModels = _submitNotificationService.GetUnseenNotifications();
                     await _hub.Clients.All.SendAsync("SubmitNotification", "you have New submitted  orders", 1, NewsubmitNotificationModel.Id);
-                  // var testMail = await Send("");
+                   //var testMail = await Send("doaa.abdel.ext@cemex.com");
                     return RedirectToAction("Index");
                 }
             }
