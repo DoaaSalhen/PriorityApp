@@ -86,6 +86,22 @@ namespace PriorityApp.Service.Implementation
 
         }
 
+        async Task<List<ItemModel>> IItemService.GetItemsByType(string type)
+        {
+            try
+            {
+                var items = _ItemRepository.Find(i => i.type == type && i.IsVisible == true).ToList();
+            var models = new List<ItemModel>();
+            models = _mapper.Map<List<ItemModel>>(items);
+                return models;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+            }
+            return null;
+        }
+
         async Task<ItemModel> IItemService.GetItemByName(string name)
         {
             try

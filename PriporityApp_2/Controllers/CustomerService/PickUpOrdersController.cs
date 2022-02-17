@@ -213,7 +213,7 @@ namespace PriorityApp.Controllers.CustomerService
 
                 Model.Territories = _territoryService.GetAllTerritoriesByStateId(Model.StateSelectedId).Result;
                 Model.Territories.Insert(0, new TerritoryModel { Id = -1, Name = "Select Territory" });
-                Model.Items = _itemService.GetAllItems().Result;
+                Model.Items = _itemService.GetItemsByType("Bags").Result;
                 return View("index", Model);
             }
             catch (Exception e)
@@ -545,8 +545,8 @@ namespace PriorityApp.Controllers.CustomerService
                 var subRegionModels = _regionService.GetAllISubRegions().Result;
                 subRegionModels.Insert(0, new SubRegionModel { Id = -1, Name = "select SubRegion" });
                 geoFilterModel.SubRegions = subRegionModels;
-                itemModels = _itemService.GetAllItems().Result;
-                itemModels = _itemService.GetAllItems().Result;
+                itemModels = _itemService.GetItemsByType("Bags").Result;
+                
                 itemModels.Insert(0, new ItemModel { Id = -1, Name = "All" });
                 geoFilterModel.Items = itemModels;
                 geoFilterModel.ItemSelectedId = -1;
@@ -572,7 +572,7 @@ namespace PriorityApp.Controllers.CustomerService
             {
                 AspNetUser applicationUser = _userManager.GetUserAsync(User).Result;
                 List<string> roles = (List<string>)_userManager.GetRolesAsync(applicationUser).Result;
-                List<ItemModel> items = _itemService.GetAllItems().Result.ToList();
+                List<ItemModel> items = _itemService.GetItemsByType("Bags").Result.ToList();
                 MemoryStream memoryStream;
                 if (roles.Contains("Sales"))
                 {

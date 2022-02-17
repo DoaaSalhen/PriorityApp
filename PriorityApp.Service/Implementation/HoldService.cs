@@ -107,16 +107,33 @@ namespace PriorityApp.Service.Implementation
             return null;
         }
 
+        public HoldModel GetLastHoldByUserIdAndPriorityDate(string? userId, DateTime? priorityDate)
+        {
+            try
+            {
+                Hold hold = _HoldRepository.Find(h => h.userId == userId && h.PriorityDate ==priorityDate, false).First();  //.OrderByDescending(h=>h.PriorityDate).Last();
+                HoldModel model = new HoldModel();
+                model = _mapper.Map<HoldModel>(hold);
+                return model;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+            }
+            return null;
+        }
+
         public DataTable prepareDataForHold(DataTable dt)
         {
             try
             {
                 DateTime priorityDate = (DateTime)dt.Rows[0]["Quota Date"];
                 int tolerance = Convert.ToInt32(dt.Rows[0]["Tolerance"]);
-                List<HoldModel> models = GetHoldBypriorityDate(priorityDate);
+               
+                //List<HoldModel> models = GetHoldBypriorityDate(priorityDate);
                 string userName;
-                if(models.Count() == 0)
-                {
+                //if(models.Count() == 0)
+                //{
                     dt.Columns.Add("RemainingQuantity");
                     dt.Columns.Add("TempReminingQuantity");
                     dt.Columns.Add("PriorityDate");
@@ -128,9 +145,18 @@ namespace PriorityApp.Service.Implementation
                         dt.Rows[index]["Tolerance"] = tolerance;
                         userName = dt.Rows[index]["Salesman"].ToString();
                         dt.Rows[index]["Salesman"] = _userManager.FindByNameAsync(userName).Result.Id;
-                    }
-                    return dt;
+                    
                 }
+                    foreach(DataRow row in dt.Rows)
+                {
+                    HoldModel hold = GetLastHoldByUserIdAndPriorityDate(row["Salesman"].ToString(), priorityDate);
+                    if (hold != null)
+                    {
+                        row.Delete();
+                    }
+                }
+                    return dt;
+                //}
    
             }
             catch(Exception e)

@@ -15,6 +15,7 @@ namespace PriorityApp.Service.Contracts
         ItemModel GetItem(int id);
         Task<List<ItemModel>> GetItemByName(ItemModel model);
         Task<ItemModel> GetItemByName(string name);
+        Task<List<ItemModel>> GetItemsByType(string type);
 
 
     }

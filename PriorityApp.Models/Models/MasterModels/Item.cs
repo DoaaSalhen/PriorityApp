@@ -16,5 +16,6 @@ namespace PriorityApp.Models.Models.MasterModels
         public bool QutaCalc { get; set; }
         public bool HMP { get; set; }
         public long? OldItemNumber { get; set; }
+        public string type { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace PriorityApp.Service.Contracts
         Task<List<HoldModel>> GetAllHolds();
         Task<bool> CreateHold(HoldModel model);
         HoldModel GetHold(DateTime? priorityDate, string? userId);
+        HoldModel GetLastHoldByUserIdAndPriorityDate(string? userId, DateTime? priorityDate);
 
         List<HoldModel> GetHoldBypriorityDate(DateTime? priorityDate);
 

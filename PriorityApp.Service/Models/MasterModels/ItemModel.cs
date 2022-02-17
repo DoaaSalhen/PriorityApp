@@ -29,5 +29,8 @@ namespace PriorityApp.Service.Models.MasterModels
 
         public float Quantity { get; set; }
 
+        public string type { get; set; }
+
+
     }
 }

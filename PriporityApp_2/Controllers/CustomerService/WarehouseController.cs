@@ -94,7 +94,7 @@ namespace PriorityApp.Controllers.CustomerService
                 var subRegionModels = _regionService.GetAllISubRegions().Result;
                 subRegionModels.Insert(0, new SubRegionModel { Id = -1, Name = "select SubRegion" });
                 warehouseOrderModel.SubRegions = subRegionModels;
-                itemModels = _itemService.GetAllItems().Result;
+                itemModels = _itemService.GetItemsByType("Bags").Result;
                 warehouseOrderModel.SubRegionSelectedId = -1;
 
                 warehouseOrderModel.SelectedPriorityDate = DateTime.Today;
@@ -126,14 +126,14 @@ namespace PriorityApp.Controllers.CustomerService
                     for (int index = 0; index < model.WarehouseModels.Count; index++)
                     {
                         WarehouseModel2 warehouseModel2 = new WarehouseModel2();
-                        warehouseModel2.itemModels = _itemService.GetAllItems().Result.ToList();
+                        warehouseModel2.itemModels = _itemService.GetItemsByType("Bags").Result.ToList();
                         warehouseModel2.priorityModels = _priorityService.GetAllPriorities().Result.ToList();
                         warehouseModel2.WarehouseModels = _warehouseService.GetAllWarehouse().Result.ToList();
 
                         warehouseModel2s.Add(warehouseModel2);
                     }
                     model.WarehouseModel2 = warehouseModel2s;
-                    model.Items = _itemService.GetAllItems().Result.ToList();
+                    model.Items = _itemService.GetItemsByType("Bags").Result.ToList();
                     model.SubRegions = _regionService.GetAllISubRegions().Result;
 
                     model.SubRegions.Insert(0, new Service.Models.MasterModels.SubRegionModel { Id = -2, Name = "Select SubRegion" });
