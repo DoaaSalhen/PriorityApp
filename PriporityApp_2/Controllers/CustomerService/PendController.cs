@@ -26,7 +26,7 @@ namespace MVCCore.ImportExcel.Controllers
         private readonly IConfiguration _configuration;
         private readonly IPendService _pendService;
         public PendController(ILogger<PendController> logger,
-            IWebHostEnvironment environment, 
+            IWebHostEnvironment environment,
             IConfiguration configuration,
             IPendService pendService)
         {
@@ -47,6 +47,8 @@ namespace MVCCore.ImportExcel.Controllers
 
             if (_pendService.ClearPend().Result)
             {
+                bool result = false;
+                bool fixResult = false;
                 string ExcelConnectionString = this._configuration.GetConnectionString("ExcelCon");
                 string SqlConnectionString = this._configuration.GetConnectionString("SqlCon");
 
@@ -69,20 +71,29 @@ namespace MVCCore.ImportExcel.Controllers
 
                     DataTable dt = _pendService.ReadExcelData(filePath, ExcelConnectionString);
                     dt = _pendService.Preprocess(dt);
+
                     if (dt.Rows.Count != 0)
                     {
-                         bool result = _pendService.WriteDataToSql(dt, SqlConnectionString);
+                        result = _pendService.WriteDataToSql(dt, SqlConnectionString);
                     }
-                    Task<bool> text = _pendService.FixDuplication();
-                    return View();
+                    if (result == true)
+                    {
+                        fixResult = _pendService.FixDuplication();
+                    }
+                }
+                if (fixResult == true)
+                {
+                    ViewBag.Message = "your File uploaded successfully";
+                }
+                else
+                {
+                    ViewBag.Message = "your File not uploaded";
                 }
                 return View();
             }
+            ViewBag.Message = "your File not uploaded";
             return View();
         }
- 
-
-        
 
 
 
@@ -101,7 +112,10 @@ namespace MVCCore.ImportExcel.Controllers
 
 
 
-         public IActionResult Privacy()
+
+
+
+        public IActionResult Privacy()
         {
             return View();
         }

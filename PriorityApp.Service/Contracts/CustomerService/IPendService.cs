@@ -16,7 +16,7 @@ namespace PriorityApp.Service.Contracts.CustomerService
         public List<Order> GetPend();
         public Task<bool> ClearPend();
 
-        public Task<bool> FixDuplication();
+        public bool FixDuplication();
 
         public DataTable Preprocess(DataTable dt);
 

@@ -42,11 +42,11 @@ namespace PriorityApp.Service.Implementation
             _userService = userService;
             _territoryService = territoryService;
             _userManager = userManager;
-            
+
         }
         public Task<bool> CreateHold(HoldModel model)
         {
-           try
+            try
             {
                 Hold hold = new Hold();
                 hold = _mapper.Map<Hold>(model);
@@ -54,7 +54,7 @@ namespace PriorityApp.Service.Implementation
                 return Task<bool>.FromResult<bool>(true);
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
@@ -79,7 +79,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                List<Hold> holds = _HoldRepository.Find(h => h.PriorityDate == priorityDate, false).ToList(); 
+                List<Hold> holds = _HoldRepository.Find(h => h.PriorityDate == priorityDate, false).ToList();
                 List<HoldModel> models = new List<HoldModel>();
                 models = _mapper.Map<List<HoldModel>>(holds);
                 return models;
@@ -100,7 +100,7 @@ namespace PriorityApp.Service.Implementation
                 models = _mapper.Map<List<HoldModel>>(holds);
                 return models;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
@@ -111,7 +111,7 @@ namespace PriorityApp.Service.Implementation
         {
             try
             {
-                Hold hold = _HoldRepository.Find(h => h.userId == userId && h.PriorityDate ==priorityDate, false).First();  //.OrderByDescending(h=>h.PriorityDate).Last();
+                Hold hold = _HoldRepository.Find(h => h.userId == userId && h.PriorityDate == priorityDate, false).First();  //.OrderByDescending(h=>h.PriorityDate).Last();
                 HoldModel model = new HoldModel();
                 model = _mapper.Map<HoldModel>(hold);
                 return model;
@@ -129,25 +129,25 @@ namespace PriorityApp.Service.Implementation
             {
                 DateTime priorityDate = (DateTime)dt.Rows[0]["Quota Date"];
                 int tolerance = Convert.ToInt32(dt.Rows[0]["Tolerance"]);
-               
+
                 //List<HoldModel> models = GetHoldBypriorityDate(priorityDate);
                 string userName;
                 //if(models.Count() == 0)
                 //{
-                    dt.Columns.Add("RemainingQuantity");
-                    dt.Columns.Add("TempReminingQuantity");
-                    dt.Columns.Add("PriorityDate");
-                    for (int index = 0; index < dt.Rows.Count; index++)
-                    {
-                        dt.Rows[index]["RemainingQuantity"] = dt.Rows[index]["Assigned"];
-                        dt.Rows[index]["TempReminingQuantity"] = dt.Rows[index]["Assigned"];
-                        dt.Rows[index]["PriorityDate"] = priorityDate;
-                        dt.Rows[index]["Tolerance"] = tolerance;
-                        userName = dt.Rows[index]["Salesman"].ToString();
-                        dt.Rows[index]["Salesman"] = _userManager.FindByNameAsync(userName).Result.Id;
-                    
+                dt.Columns.Add("RemainingQuantity");
+                dt.Columns.Add("TempReminingQuantity");
+                dt.Columns.Add("PriorityDate");
+                for (int index = 0; index < dt.Rows.Count; index++)
+                {
+                    dt.Rows[index]["RemainingQuantity"] = dt.Rows[index]["Assigned"];
+                    dt.Rows[index]["TempReminingQuantity"] = dt.Rows[index]["Assigned"];
+                    dt.Rows[index]["PriorityDate"] = priorityDate;
+                    dt.Rows[index]["Tolerance"] = tolerance;
+                    userName = dt.Rows[index]["Salesman"].ToString();
+                    dt.Rows[index]["Salesman"] = _userManager.FindByNameAsync(userName).Result.Id;
+
                 }
-                    foreach(DataRow row in dt.Rows)
+                foreach (DataRow row in dt.Rows)
                 {
                     HoldModel hold = GetLastHoldByUserIdAndPriorityDate(row["Salesman"].ToString(), priorityDate);
                     if (hold != null)
@@ -155,11 +155,11 @@ namespace PriorityApp.Service.Implementation
                         row.Delete();
                     }
                 }
-                    return dt;
+                return dt;
                 //}
-   
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
@@ -175,7 +175,7 @@ namespace PriorityApp.Service.Implementation
                 bool response = _HoldRepository.Update(hold);
                 return response;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
@@ -197,16 +197,14 @@ namespace PriorityApp.Service.Implementation
                         sqlBulkCopy.DestinationTableName = "dbo.Holds";
 
                         //[OPTIONAL]: Map the Excel columns with that of the database table.
-                        sqlBulkCopy.ColumnMappings.Add("Assigned", "QuotaQuantity");     
+                        sqlBulkCopy.ColumnMappings.Add("Assigned", "QuotaQuantity");
 
-                        sqlBulkCopy.ColumnMappings.Add("PriorityDate", "PriorityDate");        
+                        sqlBulkCopy.ColumnMappings.Add("PriorityDate", "PriorityDate");
 
                         sqlBulkCopy.ColumnMappings.Add("RemainingQuantity", "ReminingQuantity");
                         sqlBulkCopy.ColumnMappings.Add("TempReminingQuantity", "TempReminingQuantity");
                         sqlBulkCopy.ColumnMappings.Add("Salesman", "userId");
                         sqlBulkCopy.ColumnMappings.Add("Tolerance", "Tolerance");
-
-
                         con.Open();
                         sqlBulkCopy.WriteToServer(dt);
                         con.Close();

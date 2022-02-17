@@ -377,16 +377,16 @@ namespace PriorityApp.Controllers.CustomerService
                     item.territorryModel = territoryModel.First();
                     submittedOrdersTerritories.Add(item);
                 }
+                HoldModel holdModel = new HoldModel();
                 foreach (var order in unSubmittedOrders)
                 {
-                    HoldModel holdModel = _holdService.GetHold(order.PriorityDate, order.Customer.zone.Territory.userId);
+                     holdModel = _holdService.GetHold(order.PriorityDate, order.Customer.zone.Territory.userId);
                     holdModel.userId = _userManager.FindByIdAsync(order.Customer.zone.Territory.userId).Result.UserName;
                     info.holdModels.Add(holdModel);
                 }
 
-                info.holdModels = info.holdModels.GroupBy(h=>h.PriorityDate).Select(h => h.First()).ToList();
-
-                //info.holdModels = info.holdModels.Distinct<HoldModel>().ToList();
+               // info.holdModels = info.holdModels.GroupBy(h => h.PriorityDate, h => h.userId).
+               info.holdModels = info.holdModels.Distinct<HoldModel>().ToList();
                 info.ordersTosubmit = unSubmittedOrders;
                 info.submittedOrdersTerritories = submittedOrdersTerritories;
                 info.OrdersCount = unSubmittedOrders.Count();

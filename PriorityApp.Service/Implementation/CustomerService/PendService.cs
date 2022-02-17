@@ -18,7 +18,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
 {
     public class PendService : IPendService
     {
-        private readonly IRepository<Order,long> _repository;
+        private readonly IRepository<Order, long> _repository;
         private readonly ILogger<PendService> _logger;
         private readonly IMapper _mapper;
 
@@ -32,7 +32,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
             NAG = 6,
             BDR = 7
         }
-        public PendService(IRepository<Order, long> repository, 
+        public PendService(IRepository<Order, long> repository,
                             ILogger<PendService> logger,
                             IMapper mapper)
         {
@@ -50,7 +50,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
             try
             {
                 //List<Order> PendOrders = _repository.Find(x => x.Dispatched == false).ToList();
-                List<Order> PendOrders = _repository.Find(x => x.PriorityId ==(int) CommanData.Priorities.No).ToList(); //priority No
+                List<Order> PendOrders = _repository.Find(x => x.PriorityId == (int)CommanData.Priorities.No).ToList(); //priority No
                 //Find(x => x.Dispatched).ToList();
                 foreach (Order o in PendOrders)
                 {
@@ -99,7 +99,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
                 }
                 return dt;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -111,7 +111,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
         {
             try
             {
-               dt.CaseSensitive = false;
+                dt.CaseSensitive = false;
                 using (SqlConnection con = new SqlConnection(SqlConnectionString))
                 {
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
@@ -121,14 +121,14 @@ namespace PriorityApp.Service.Implementation.CustomerService
 
                         //[OPTIONAL]: Map the Excel columns with that of the database table.
                         sqlBulkCopy.ColumnMappings.Add("PriorityDATE", "PriorityDate");     //1
-                       
+
                         sqlBulkCopy.ColumnMappings.Add("SDPA8", "CustomerId");        //22
-     
-                        sqlBulkCopy.ColumnMappings.Add("SDDOCO",    "OrderNumber");          //6
-                        sqlBulkCopy.ColumnMappings.Add("SDDCTO",    "OrderDocument");       //7
-                        sqlBulkCopy.ColumnMappings.Add("SDLNID",    "LineID");             //8
-                        sqlBulkCopy.ColumnMappings.Add("DATE",      "OrderDate");         //9  
-                        sqlBulkCopy.ColumnMappings.Add("SDITM",     "ItemId");           //10
+
+                        sqlBulkCopy.ColumnMappings.Add("SDDOCO", "OrderNumber");          //6
+                        sqlBulkCopy.ColumnMappings.Add("SDDCTO", "OrderDocument");       //7
+                        sqlBulkCopy.ColumnMappings.Add("SDLNID", "LineID");             //8
+                        sqlBulkCopy.ColumnMappings.Add("DATE", "OrderDate");         //9  
+                        sqlBulkCopy.ColumnMappings.Add("SDITM", "ItemId");           //10
 
                         sqlBulkCopy.ColumnMappings.Add("SDSHAN", "PODNumber");            //11
                         sqlBulkCopy.ColumnMappings.Add("ABALPH01", "PODName");             //12
@@ -154,24 +154,29 @@ namespace PriorityApp.Service.Implementation.CustomerService
             return false;
         }
 
-        public Task<bool> FixDuplication()
+        public bool FixDuplication()
         {
             try
             {
-                var orders =_repository.Findlist().Result.GroupBy(x => x.OrderNumber).Where(x => x.Count() > 1).Select(x => x.Where(x => x.SavedBefore == false)).ToList();
-
+                var orders = _repository.Findlist().Result.GroupBy(x => x.OrderNumber).Where(x => x.Count() > 1).Select(x => x.Where(x => x.SavedBefore == false && x.OrderCategoryId == (int)CommanData.OrderCategory.Delivery)).ToList();
+                //var orders = _repository.Findlist().Result.Where(x => x.SavedBefore == false && x.OrderCategoryId == (int)CommanData.OrderCategory.Delivery).GroupBy(x => x.OrderNumber).Where(x => x.Count() > 1).ToList();
                 foreach (var order in orders.ToList())
                 {
-                    long id = (long)order.Where(o=>o.SavedBefore == false).Select(x => x.Id).FirstOrDefault();
-                    _repository.DeleteById(id);  
+                    var x = order.Select(o => o.Id).Any();
+                    if (x == true)
+                    {
+                        long id = (long)order.Where(o => o.SavedBefore == false).Select(x => x.Id).FirstOrDefault();
+                        _repository.DeleteById(id);
+                    }
+
                 }
-                return Task<bool>.FromResult<bool>(true);
+                return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
-            return Task<bool>.FromResult<bool>(false);
+            return false;
         }
 
         public DataTable Preprocess(DataTable dt)
@@ -180,7 +185,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
             try
             {
                 dt.Columns.Add(new DataColumn("OrderCategoryId"));
-             
+
                 for (int index = 0; index < dt.Columns.Count; index++)
                 {
                     dt.Columns[index].ColumnName = dt.Columns[index].ColumnName.Trim();
@@ -193,7 +198,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
                     {
                         row["OrderCategoryId"] = (int)CommanData.OrderCategory.Delivery;
                         string z = row["QNTY"].ToString();
-                       // var customerNumber = row["SDPA8"];
+                        // var customerNumber = row["SDPA8"];
                         if (row["STATUS"].ToString() == "Cancelled")
                         {
                             row.Delete();
@@ -220,7 +225,7 @@ namespace PriorityApp.Service.Implementation.CustomerService
                 ////////////////////////////// replace ZoneCode by zoneId
                 return dt;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }

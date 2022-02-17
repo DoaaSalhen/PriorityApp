@@ -91,11 +91,11 @@ namespace PriorityApp.Controllers.CustomerService
 
                 return View("index", holdModel);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
             }
-            
+
         }
 
         // GET: HoldController/Details/5
@@ -120,11 +120,11 @@ namespace PriorityApp.Controllers.CustomerService
             try
             {
                 //List<TerritoryModel> territoryModels = _territoryService.GetAllTeritories().Result.ToList();
-                List < AspNetUser> salesUsers= _userManager.GetUsersInRoleAsync("Sales").Result.ToList();
+                List<AspNetUser> salesUsers = _userManager.GetUsersInRoleAsync("Sales").Result.ToList();
                 memoryStream = _excelService.WritQuotaTemplateToExcel(salesUsers);
                 return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "QuotaTemplate.xlsx");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
             }
@@ -141,7 +141,9 @@ namespace PriorityApp.Controllers.CustomerService
             {
                 string ExcelConnectionString = this._configuration.GetConnectionString("ExcelCon");
                 string SqlConnectionString = this._configuration.GetConnectionString("SqlCon");
-
+                bool result = false;
+                DataTable dt = null;
+                int rowsCount = 0;
                 if (postedFile != null)
                 {
                     //Create a Folder.
@@ -158,23 +160,32 @@ namespace PriorityApp.Controllers.CustomerService
                     {
                         postedFile.CopyTo(stream);
                     }
-                    DataTable dt = _excelService.ReadExcelData(filePath, ExcelConnectionString);
-                    
+                    dt = _excelService.ReadExcelData(filePath, ExcelConnectionString);
+
                     dt = _holdService.prepareDataForHold(dt);
-                    if(dt != null)
+                    if (dt != null)
                     {
-                        bool result = _holdService.AddQuotaFile(dt, SqlConnectionString);
-
-                        if (result == true)
-                        {
-                            return RedirectToAction("index");
-                        }
-                        else
-                        {
-                            return RedirectToAction("ERROR404");
-
-                        }
+                        result = _holdService.AddQuotaFile(dt, SqlConnectionString);
                     }
+
+
+                }
+                //foreach (DataRow row in dt.Rows)
+                //{
+                //    if (row["Salesman"] == DBNull.Value)
+                //    {
+                //        rowsCount = rowsCount++;
+                //    }
+                //}
+                if (result == true)
+                {
+                    ViewBag.Message = "your File uploaded successfully";  //you have added "+ dt.Rows.Count +" new Quota rows";
+                    return View();
+                }
+                else
+                {
+                    ViewBag.Message = "your File not uploaded";
+                    return View();
 
                 }
                 return View();
@@ -200,13 +211,13 @@ namespace PriorityApp.Controllers.CustomerService
         {
             try
             {
-                if(model.QuotaQuantity < model.ReminingQuantity)
+                if (model.QuotaQuantity < model.ReminingQuantity)
                 {
                     //model.ReminingQuantity = 
                 }
                 model.TempReminingQuantity = model.ReminingQuantity;
                 bool result = _holdService.UpdateHold(model).Result;
-                if(result == true)
+                if (result == true)
                 {
                     ViewData["SearchPriorityDate"] = model.PriorityDate;
                     ActionResult action = Search();
@@ -219,9 +230,9 @@ namespace PriorityApp.Controllers.CustomerService
                     return RedirectToAction("index");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return RedirectToAction("ERROR404");;
+                return RedirectToAction("ERROR404"); ;
                 //return View();
             }
         }

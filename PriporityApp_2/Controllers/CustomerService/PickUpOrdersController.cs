@@ -360,7 +360,7 @@ namespace PriorityApp.Controllers.CustomerService
             {
                 string ExcelConnectionString = this._configuration.GetConnectionString("ExcelCon");
                 string SqlConnectionString = this._configuration.GetConnectionString("SqlCon");
-
+                bool addResult = false;
                 if (postedFile != null)
                 {
                     //Create a Folder.
@@ -420,31 +420,44 @@ namespace PriorityApp.Controllers.CustomerService
                                 {
                                     if (customerModel.zone.Territory.userId == applicationUser.Id)
                                     {
-                                        await AddNewPickUpOrder(row, applicationUser, status, lastSubmitNumber);
+                                        addResult = await AddNewPickUpOrder(row, applicationUser, status, lastSubmitNumber);
                                     }
                                 }
                                 else
                                 {
-                                    await AddNewPickUpOrder(row, applicationUser, status, lastSubmitNumber);
+                                    addResult = await AddNewPickUpOrder(row, applicationUser, status, lastSubmitNumber);
                                 }
 
                             }
+                            if (addResult == true)
+                            {
+                                ViewBag.Message = "your File uploaded successfully";
+                                return View();
+                            }
+                            else
+                            {
+                                ViewBag.Message = "your File not uploaded";
+                                return View();
+                            }
                         }
-                        else
-                        {
-                            ViewBag["FileError"] = "there is an error in your file";
-                            return View();
-                        }
+                        //else
+                        //{
+                        //    ViewBag.Message = "there is an error in your file";
+                        //    return View();
+                        //}
                     }
-
-                    return View();
+                    else
+                    {
+                        ViewBag.Message = "there is an error in your file";
+                        return View();
+                    }
                 }
-                ViewBag["NoFile"] = "please select valid file";
+                ViewBag.Message = "please select valid file";
                 return View();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                  return RedirectToAction("ERROR404");
+                return RedirectToAction("ERROR404");
             }
 
 
@@ -460,9 +473,9 @@ namespace PriorityApp.Controllers.CustomerService
                 ZoneModel zoneModel = _zoneService.GetZone(customerModel.ZoneId);
                 HoldModel holdModel = _holdService.GetHold(priorityDate, zoneModel.Territory.userId);
                 return holdModel;
-               
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
@@ -470,7 +483,7 @@ namespace PriorityApp.Controllers.CustomerService
         }
 
 
-        public  async Task<bool> AddNewPickUpOrder(DataRow row, AspNetUser applicationUser, string status, int lastSubmitNumber)
+        public async Task<bool> AddNewPickUpOrder(DataRow row, AspNetUser applicationUser, string status, int lastSubmitNumber)
         {
             DateTime priorityDate = DateTime.Parse(row["PriorityDate"].ToString());
             bool addResult;
@@ -490,7 +503,7 @@ namespace PriorityApp.Controllers.CustomerService
             //orderModel2.Submitted = true;
             //orderModel2.SubmitNumber = lastSubmitNumber;
             //orderModel2.Status = status;
-            orderModel2.OrderCategoryId = (int) CommanData.OrderCategory.Pickup;
+            orderModel2.OrderCategoryId = (int)CommanData.OrderCategory.Pickup;
 
             if (Convert.ToInt32(row["Priority"]) == (Int32)CommanData.Priorities.Norm)
             {
@@ -501,17 +514,17 @@ namespace PriorityApp.Controllers.CustomerService
                 {
                     holdModel.ReminingQuantity = holdModel.ReminingQuantity - (int)orderModel2.PriorityQuantity;
                     holdModel.TempReminingQuantity = holdModel.ReminingQuantity;
-                    addResult = await  _orderService.CreateOrder(orderModel2, holdModel);
+                    addResult = await _orderService.CreateOrder(orderModel2, holdModel);
                     if (!addResult)
                     {
-                        ViewBag["AddErrorMessage"] = "There is an error in the order with customer number =" + orderModel2.CustomerId + " and item Number = " + orderModel2.ItemId;
+                        ViewBag.Message = "There is an error in the order with customer number =" + orderModel2.CustomerId + " and item Number = " + orderModel2.ItemId;
                         return false;
                     }
 
                 }
                 else
                 {
-                    ViewBag["QuotaErrorMessage"] = "There is no enough quantity";
+                    ViewBag.Message= "There is no enough quantity";
                     return false;
                 }
             }
@@ -520,7 +533,7 @@ namespace PriorityApp.Controllers.CustomerService
                 addResult = await _orderService.CreateOrder(orderModel2);
                 if (!addResult)
                 {
-                    ViewBag["AddErrorMessage"] = "There is an error in the order with customer number =" + orderModel2.CustomerId + " and item Number = " + orderModel2.ItemId;
+                    ViewBag.Message= "There is an error in the order with customer number =" + orderModel2.CustomerId + " and item Number = " + orderModel2.ItemId;
                     return false;
                 }
             }
@@ -546,7 +559,7 @@ namespace PriorityApp.Controllers.CustomerService
                 subRegionModels.Insert(0, new SubRegionModel { Id = -1, Name = "select SubRegion" });
                 geoFilterModel.SubRegions = subRegionModels;
                 itemModels = _itemService.GetItemsByType("Bags").Result;
-                
+
                 itemModels.Insert(0, new ItemModel { Id = -1, Name = "All" });
                 geoFilterModel.Items = itemModels;
                 geoFilterModel.ItemSelectedId = -1;
@@ -581,17 +594,17 @@ namespace PriorityApp.Controllers.CustomerService
                     List<CustomerModel> customers = _deliveryCustomerService.GetAllDeliveryCustomer().Result.ToList();
                     List<CustomerModel> territoryCustomers = customers.Where(c => c.zone.TerritoryId == territoryModel.Id).ToList();
 
-                     memoryStream = _excelService.WritePickUpTemplateToExcel(items, territoryCustomers);
+                    memoryStream = _excelService.WritePickUpTemplateToExcel(items, territoryCustomers);
                 }
                 else
                 {
-                     memoryStream = _excelService.WritePickUpTemplateToExcel(items, null);
+                    memoryStream = _excelService.WritePickUpTemplateToExcel(items, null);
 
                 }
 
                 return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "PickupTemplate.xlsx");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
                 _logger.LogError(e.ToString());

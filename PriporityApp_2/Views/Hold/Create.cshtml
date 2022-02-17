@@ -1,10 +1,11 @@
 ﻿
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/NiceAdmin/_CSLayout.cshtml";
-}
+@{ ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/NiceAdmin/_CSLayout.cshtml"; }
 
-<h3>Upload Quota File</h3>
+@if (ViewBag.Message != null)
+{
+<div style="background-color: #00e600; height: 60px; box-shadow: 5px; margin: 0px 20px 20px 50px; text-align:center; font-size:x-large">@ViewBag.Message</div>}
+<h2>Upload Quota File</h2>
 
 <div class="text-center uploadOrdersDiv">
     <form asp-controller="Hold" asp-action="Create" method="post" enctype="multipart/form-data">
