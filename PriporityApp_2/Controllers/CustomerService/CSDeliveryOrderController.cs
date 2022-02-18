@@ -113,7 +113,7 @@ namespace PriorityApp.Controllers.CustomerService
 
                 return View(geoFilterModel);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
             }
@@ -136,11 +136,11 @@ namespace PriorityApp.Controllers.CustomerService
                 }
                 return Json(new SelectList(stateModels, "Id", "Name"));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return (JsonResult)ERROR404();
             }
-            
+
         }
 
         public JsonResult TerritoryFilter(int id)
@@ -219,20 +219,20 @@ namespace PriorityApp.Controllers.CustomerService
                     orderModels = _orderService.GetOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o => o.OrderCategoryId == (int)CommanData.OrderCategory.Delivery && o.Submitted == false).ToList();
 
                 }
-                else if(Model.orderType == (int)CommanData.OrderCategory.Pickup && Model.viewCase=="show")
+                else if (Model.orderType == (int)CommanData.OrderCategory.Pickup && Model.viewCase == "show")
                 {
                     orderModels = _orderService.GetSubmittedOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o => o.OrderCategoryId == Model.orderType).ToList();
                 }
                 else if (Model.orderType == (int)CommanData.OrderCategory.Pickup && Model.viewCase == "edit")
                 {
-                    orderModels = _orderService.GetOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o=>o.OrderCategoryId == Model.orderType && o.Submitted == false).ToList();
+                    orderModels = _orderService.GetOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o => o.OrderCategoryId == Model.orderType && o.Submitted == false).ToList();
                 }
                 if (Model.ItemSelectedId != -1)
                 {
                     orderModels = orderModels.Where(o => o.ItemId == Model.ItemSelectedId).ToList();
 
                 }
-                
+
                 Model.OrderModel = new OrderModel();
                 Model.OrderModel.orders = orderModels;
                 Model.Customers = customerModels;
@@ -264,7 +264,7 @@ namespace PriorityApp.Controllers.CustomerService
                     return View(@"PickUpOrders\EditPickUpOrders", Model);
                 }
 
-                
+
             }
             catch
             {
@@ -284,13 +284,13 @@ namespace PriorityApp.Controllers.CustomerService
                 bool updateOrderResult = false;
                 int SavedOrderCount = 0;
                 bool AllOrdersSaved = true;
-                foreach (var orderModel in Model.OrderModel.orders.Where(o => o.PriorityId !=(int)CommanData.Priorities.No && o.Submitted == false))
+                foreach (var orderModel in Model.OrderModel.orders.Where(o => o.PriorityId != (int)CommanData.Priorities.No && o.Submitted == false))
                 {
 
                     OrderModel2 updateModel = _orderService.GetOrder((long)orderModel.Id);
                     HoldModel DBholdModel = _holdService.GetHold(Model.HoldModel.PriorityDate, Model.HoldModel.userId);
-                    
-                   if(orderModel.SavedBefore == true)
+
+                    if (orderModel.SavedBefore == true)
                     {
                         if (orderModel.PriorityId == (int)CommanData.Priorities.Norm && updateModel.PriorityId == (int)CommanData.Priorities.Norm)
                         {
@@ -307,7 +307,7 @@ namespace PriorityApp.Controllers.CustomerService
                             DBholdModel.ReminingQuantity = (float)DBholdModel.ReminingQuantity + (float)updateModel.PriorityQuantity;
                         }
                     }
-                  
+
                     else if (orderModel.SavedBefore == false && (orderModel.PriorityId == (int)CommanData.Priorities.Norm))
                     {
                         DBholdModel.ReminingQuantity = (float)DBholdModel.ReminingQuantity - (float)orderModel.PriorityQuantity;
@@ -321,8 +321,8 @@ namespace PriorityApp.Controllers.CustomerService
                     updateModel.Comment = orderModel.Comment;
                     updateModel.Truck = orderModel.Truck;
                     updateModel.OrderCategoryId = Model.orderType;
-                   
-                    updateOrderResult = _orderService.UpdateOrder2(updateModel,DBholdModel).Result;
+
+                    updateOrderResult = _orderService.UpdateOrder2(updateModel, DBholdModel).Result;
                     if (updateOrderResult == true)
                     {
                         SavedOrderCount = SavedOrderCount + 1;
@@ -344,7 +344,7 @@ namespace PriorityApp.Controllers.CustomerService
             }
             catch (Exception e)
             {
-                
+
                 _logger.LogError(e.ToString());
                 return RedirectToAction("ERROR404");
             }
@@ -380,13 +380,13 @@ namespace PriorityApp.Controllers.CustomerService
                 HoldModel holdModel = new HoldModel();
                 foreach (var order in unSubmittedOrders)
                 {
-                     holdModel = _holdService.GetHold(order.PriorityDate, order.Customer.zone.Territory.userId);
+                    holdModel = _holdService.GetHold(order.PriorityDate, order.Customer.zone.Territory.userId);
                     holdModel.userId = _userManager.FindByIdAsync(order.Customer.zone.Territory.userId).Result.UserName;
                     info.holdModels.Add(holdModel);
                 }
 
-               // info.holdModels = info.holdModels.GroupBy(h => h.PriorityDate, h => h.userId).
-               info.holdModels = info.holdModels.Distinct<HoldModel>().ToList();
+                info.holdModels = info.holdModels.GroupBy(h => h.userId).Select(x => x.First()).ToList();
+                //info.holdModels = info.holdModels.Distinct<HoldModel>().ToList();
                 info.ordersTosubmit = unSubmittedOrders;
                 info.submittedOrdersTerritories = submittedOrdersTerritories;
                 info.OrdersCount = unSubmittedOrders.Count();
@@ -401,6 +401,8 @@ namespace PriorityApp.Controllers.CustomerService
             }
             //return null;
         }
+
+        [HttpPost]
         public async Task<ActionResult> Confirm(SubmittInfo model)
         {
             AspNetUser applicationUser = _userManager.GetUserAsync(User).Result;
@@ -431,9 +433,9 @@ namespace PriorityApp.Controllers.CustomerService
                 }
                 foreach (OrderModel2 order in unSubmittedOrders)
                 {
-                    if(order.Status != null)
+                    if (order.Status != null)
                     {
-                        order.Status = order.Status == " " ? "Modified": order.Status.Replace('N', 'M');
+                        order.Status = order.Status == " " ? "Modified" : order.Status.Replace('N', 'M');
                     }
                     else
                     {
@@ -462,30 +464,30 @@ namespace PriorityApp.Controllers.CustomerService
                     SubmitNotificationModel NewsubmitNotificationModel = _submitNotificationService.CreateSubmitNotification(submitNotificationModel);
                     if (NewsubmitNotificationModel != null)
                     {
-                            List<UserNotificationModel> userNotificationModels = new List<UserNotificationModel>();
-                            List<AspNetUser> users = _userManager.GetUsersInRoleAsync("Dispatch").Result.ToList();
-                            foreach (var user in users)
-                            {
-                                UserNotificationModel userNotificationModel = new UserNotificationModel();
-                                userNotificationModel.submitNotificationId = NewsubmitNotificationModel.Id;
-                                userNotificationModel.Seen = false;
-                                userNotificationModel.userId = user.Id;
-                                userNotificationModels.Add(userNotificationModel);
-                            }
-                            await _userNotificationService.CreateUserNotification(userNotificationModels);
-                            foreach (var id in submittedOrderIdsList)
-                         {
+                        List<UserNotificationModel> userNotificationModels = new List<UserNotificationModel>();
+                        List<AspNetUser> users = _userManager.GetUsersInRoleAsync("Dispatch").Result.ToList();
+                        foreach (var user in users)
+                        {
+                            UserNotificationModel userNotificationModel = new UserNotificationModel();
+                            userNotificationModel.submitNotificationId = NewsubmitNotificationModel.Id;
+                            userNotificationModel.Seen = false;
+                            userNotificationModel.userId = user.Id;
+                            userNotificationModels.Add(userNotificationModel);
+                        }
+                        await _userNotificationService.CreateUserNotification(userNotificationModels);
+                        foreach (var id in submittedOrderIdsList)
+                        {
                             OrderNotificationModel orderNotificationModel = new OrderNotificationModel();
                             orderNotificationModel.submitNotificationId = NewsubmitNotificationModel.Id;
                             orderNotificationModel.OrderId = id;
                             orderNotificationModel.CreatedDate = DateTime.Now;
                             orderNotificationModel.UpdatedDate = DateTime.Now;
-                            bool addOrderNotification = _submitNotificationService.CreateOrderNotification(orderNotificationModel).Result; 
+                            bool addOrderNotification = _submitNotificationService.CreateOrderNotification(orderNotificationModel).Result;
                         }
                     }
-                   //List<SubmitNotificationModel> submitNotificationModels = _submitNotificationService.GetUnseenNotifications();
+                    //List<SubmitNotificationModel> submitNotificationModels = _submitNotificationService.GetUnseenNotifications();
                     await _hub.Clients.All.SendAsync("SubmitNotification", "you have New submitted  orders", 1, NewsubmitNotificationModel.Id);
-                   //var testMail = await Send("doaa.abdel.ext@cemex.com");
+                    //var testMail = await Send("doaa.abdel.ext@cemex.com");
                     return RedirectToAction("Index");
                 }
             }
@@ -522,7 +524,7 @@ namespace PriorityApp.Controllers.CustomerService
                 GeoFilterModel geoFilterModel = StartData();
                 return View(geoFilterModel);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
             }
@@ -536,7 +538,7 @@ namespace PriorityApp.Controllers.CustomerService
                 GeoFilterModel geoFilterModel = StartData();
                 return View(geoFilterModel);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
             }
@@ -573,7 +575,7 @@ namespace PriorityApp.Controllers.CustomerService
 
                 List<long> customerNumbers = customerModels.Select(c => c.Id).ToList();
 
-                orderModels = _orderService.GetSubmittedOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o=>o.OrderCategoryId == Model.orderType).ToList();
+                orderModels = _orderService.GetSubmittedOdersByListOfCustomerNumbers(customerNumbers, selectedPriorityDate).Result.Where(o => o.OrderCategoryId == Model.orderType).ToList();
 
                 if (Model.ItemSelectedId != -1)
                 {
@@ -606,7 +608,7 @@ namespace PriorityApp.Controllers.CustomerService
 
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
                 _logger.LogError(e.ToString());
@@ -619,7 +621,7 @@ namespace PriorityApp.Controllers.CustomerService
                 OrderModel2 model = _orderService.GetOrder(id);
                 return View(model);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
             }
@@ -651,7 +653,7 @@ namespace PriorityApp.Controllers.CustomerService
 
         }
 
-       public GeoFilterModel StartData()
+        public GeoFilterModel StartData()
         {
             try
             {
@@ -680,7 +682,7 @@ namespace PriorityApp.Controllers.CustomerService
             return null;
 
         }
-        public async Task<JsonResult> updateSeenNotification (long id)
+        public async Task<JsonResult> updateSeenNotification(long id)
         {
             try
             {
@@ -688,11 +690,11 @@ namespace PriorityApp.Controllers.CustomerService
                 AspNetUser applicationUser = _userManager.GetUserAsync(User).Result;
                 List<UserNotificationModel> userNotificationModels = new List<UserNotificationModel>();
 
-                userNotificationModels =  _userNotificationService.GetUserNotification(applicationUser.Id, id);
+                userNotificationModels = _userNotificationService.GetUserNotification(applicationUser.Id, id);
                 userNotificationModels.ForEach(u => u.Seen = true);
-                foreach(var userNotificationModel in userNotificationModels)
+                foreach (var userNotificationModel in userNotificationModels)
                 {
-                     updateResult = await _userNotificationService.UpdateUserNotification(userNotificationModel);
+                    updateResult = await _userNotificationService.UpdateUserNotification(userNotificationModel);
 
                 }
                 if (updateResult)
@@ -704,7 +706,7 @@ namespace PriorityApp.Controllers.CustomerService
                     return Json(false);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
@@ -722,11 +724,11 @@ namespace PriorityApp.Controllers.CustomerService
                 await _emailSender.SendEmailAsync(toAddress, subject, body);
                 return View();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ERROR404");
             }
-            
+
         }
 
         // GET: CSDeliveryOrderController/Details/5

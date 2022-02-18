@@ -268,9 +268,6 @@ namespace PriorityApp.Controllers.CustomerService
                         updateModel.Dispatched = false;
 
 
-                        //updateModel.OrderNumber = orderModel.OrderNumber;
-
-
                         Model.HoldModel.ReminingQuantity = Model.HoldModel.ReminingQuantity - (int)pickUpOrder.PriorityQuantity;
                         updateOrderResult = _orderService.CreateOrder(updateModel, Model.HoldModel).Result;
                         if (updateOrderResult == true)
@@ -440,11 +437,11 @@ namespace PriorityApp.Controllers.CustomerService
                                 return View();
                             }
                         }
-                        //else
-                        //{
-                        //    ViewBag.Message = "there is an error in your file";
-                        //    return View();
-                        //}
+                        else
+                        {
+                            ViewBag.Message = "there is an error in your file";
+                            return View();
+                        }
                     }
                     else
                     {
@@ -495,6 +492,7 @@ namespace PriorityApp.Controllers.CustomerService
             orderModel2.PriorityQuantity = Convert.ToInt32(row["Quantity"]);
             orderModel2.PriorityId = Convert.ToInt32(row["Priority"]);
             orderModel2.Comment = row["Comment"].ToString();
+            orderModel2.Truck = row["Truck"].ToString();
             orderModel2.WHSavedID = applicationUser.Id;
             orderModel2.SavedBefore = true;
             orderModel2.Submitted = false;
@@ -524,7 +522,7 @@ namespace PriorityApp.Controllers.CustomerService
                 }
                 else
                 {
-                    ViewBag.Message= "There is no enough quantity";
+                    ViewBag.Message = "There is no enough quantity";
                     return false;
                 }
             }
@@ -533,7 +531,7 @@ namespace PriorityApp.Controllers.CustomerService
                 addResult = await _orderService.CreateOrder(orderModel2);
                 if (!addResult)
                 {
-                    ViewBag.Message= "There is an error in the order with customer number =" + orderModel2.CustomerId + " and item Number = " + orderModel2.ItemId;
+                    ViewBag.Message = "There is an error in the order with customer number =" + orderModel2.CustomerId + " and item Number = " + orderModel2.ItemId;
                     return false;
                 }
             }

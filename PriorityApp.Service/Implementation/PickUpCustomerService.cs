@@ -45,13 +45,14 @@ namespace PriorityApp.Service.Implementation
             try
             {
                 DataTable newDT = new DataTable("pickup");
-                newDT.Columns.AddRange(new DataColumn[6] { new DataColumn("CustomerNumber"),
+                newDT.Columns.AddRange(new DataColumn[7] { new DataColumn("CustomerNumber"),
                                             new DataColumn("ItemNumber"),
                                             new DataColumn("Quantity"),
                                             new DataColumn("Priority"),
                                             new DataColumn("PriorityDate"),
                                             new DataColumn("Comment"),
-                                             
+                                            new DataColumn("Truck"),
+
                                            });
 
                 for (int index = 0; index < dt.Columns.Count; index++)
@@ -89,7 +90,7 @@ namespace PriorityApp.Service.Implementation
                                     {
                                         totalQuantityForCustomer = totalQuantityForCustomer + Convert.ToDouble(row[index]);
                                     }
-                                    newDT.Rows.Add(row[0], dt.Columns[index].ColumnName, row[index], row["Priority"], (DateTime)row["PriorityDate"], row["Comment"]);
+                                    newDT.Rows.Add(row[0], dt.Columns[index].ColumnName, row[index], row["Priority"], (DateTime)row["PriorityDate"], row["Comment"], row["Truck"]);
                                 }
                             }
                             tempRemaining = hold.TempReminingQuantity - (float)totalQuantityForCustomer;

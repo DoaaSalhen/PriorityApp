@@ -1,21 +1,18 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
+@{ }
 @inject UserManager<AspNetUser> userManager
 
 @model PriorityApp.Service.Models.GeoFilterModel
 
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/NiceAdmin/_CSLayout.cshtml";
-    int holdReminingQuantity = 0;
-    var user = await userManager.GetUserAsync(User);
-    var displayName = user.UserName;
-    var roles = await userManager.GetRolesAsync(user);
-    var tempModel = Model;
-}
+@{ ViewData["Title"] = "Index";
+                Layout = "~/Views/Shared/NiceAdmin/_CSLayout.cshtml";
+                int holdReminingQuantity = 0;
+                var user = await userManager.GetUserAsync(User);
+                var displayName = user.UserName;
+                var roles = await userManager.GetRolesAsync(user);
+                var tempModel = Model; }
 <style>
 
     table {
@@ -44,9 +41,9 @@
 <script src="/lib/jquery/dist/jquery.js"></script>
 <link rel="stylesheet" href="~/css/newStyleSheet.css">
 <script src="~/js/addDispatchNotificationATStart.js"></script>
-@if(Model.userNotificationModels != null)
-            {
-                <script>
+@if (Model.userNotificationModels != null)
+{
+<script>
                     window.onload = function (e) {
                         for (var i = 1; i <= @Model.userNotificationModels.Count; i++) {
 
@@ -55,8 +52,7 @@
 
                     }
 
-                </script>
-            }
+</script>            }
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -154,63 +150,58 @@
 
         @if (Model.SubRegions == null)
         {
-            <div class="form-row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
-                    <label class="control-label">SubRegion</label>
-                    <select id="SubRegionSelectedId" name="SubRegionSelectedId" asp-for="SubRegionSelectedId"
-                            class="form-control"
-                            asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
-                </div>
+<div class="form-row">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
+        <label class="control-label">SubRegion</label>
+        <select id="SubRegionSelectedId" name="SubRegionSelectedId" asp-for="SubRegionSelectedId"
+                class="form-control"
+                asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
+    </div>
 
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
-                    <label class="control-label">Dispatch</label>
-                    <select id="DispatchCaseSelectedId" name="DispatchCaseSelectedId" asp-for="DispatchCaseSelectedId"
-                            class="form-control"
-                            asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="form-row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
-                    <label class="control-label">SubRegion</label>
-                    <select id="SubRegionSelectedId" name="SubRegionSelectedId" asp-for="SubRegionSelectedId"
-                            class="form-control"
-                            asp-items="@(new SelectList(Model.SubRegions, "Id", "Name"))"></select>
-                </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
+        <label class="control-label">Dispatch</label>
+        <select id="DispatchCaseSelectedId" name="DispatchCaseSelectedId" asp-for="DispatchCaseSelectedId"
+                class="form-control"
+                asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
+    </div>
+</div> }
+            else
+            {
+<div class="form-row">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
+        <label class="control-label">SubRegion</label>
+        <select id="SubRegionSelectedId" name="SubRegionSelectedId" asp-for="SubRegionSelectedId"
+                class="form-control"
+                asp-items="@(new SelectList(Model.SubRegions, "Id", "Name"))"></select>
+    </div>
 
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
-                    <label class="control-label">Dispatch</label>
-                    <select id="DispatchCaseSelectedId" name="DispatchCaseSelectedId" asp-for="DispatchCaseSelectedId"
-                            class="form-control"
-                            asp-items="@(new SelectList(Model.DispatchCases, "Id", "Name"))"></select>
-                </div>
-            </div>
-        }
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
+        <label class="control-label">Dispatch</label>
+        <select id="DispatchCaseSelectedId" name="DispatchCaseSelectedId" asp-for="DispatchCaseSelectedId"
+                class="form-control"
+                asp-items="@(new SelectList(Model.DispatchCases, "Id", "Name"))"></select>
+    </div>
+</div>}
         @if (Model.States == null)
         {
-            <div class="form-row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
-                    <label class="control-label">State</label>
-                    <select id="StateSelectedId" name="StateSelectedId" asp-for="StateSelectedId"
-                            class="form-control"
-                            asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="form-row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
-                    <label class="control-label">State</label>
-                    <select id="StateSelectedId" name="StateSelectedId" asp-for="StateSelectedId"
-                            class="form-control"
-                            asp-items="@(new SelectList(Model.States, "Id", "Name"))"></select>
-                </div>
-            </div>
-
-        }
+<div class="form-row">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
+        <label class="control-label">State</label>
+        <select id="StateSelectedId" name="StateSelectedId" asp-for="StateSelectedId"
+                class="form-control"
+                asp-items="@(new SelectList(string.Empty, "Id", "Name"))"></select>
+    </div>
+</div> }
+            else
+            {
+<div class="form-row">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-2 selectFilter" style="display:inline-block">
+        <label class="control-label">State</label>
+        <select id="StateSelectedId" name="StateSelectedId" asp-for="StateSelectedId"
+                class="form-control"
+                asp-items="@(new SelectList(Model.States, "Id", "Name"))"></select>
+    </div>
+</div>}
         <input type="submit" value="Search" class="btn btn-primary btn-lg searchbtn" />
 
     </div>
@@ -242,155 +233,144 @@
         <tbody>
             @if (Model.OrderModel != null)
             {
-                @for (int index = 0; index < Model.OrderModel.orders.Count; index++)
-                {
-                    string diapatchedCheckListId = "DisList" + index;
-                    string UnlockId = "UnlockId" + index;
-                    <tr>
+@for (int index = 0; index < Model.OrderModel.orders.Count; index++)
+{
+    string diapatchedCheckListId = "DisList" + index;
+    string UnlockId = "UnlockId" + index;
+<tr>
 
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].Customer.CustomerName)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].CustomerId" type="hidden" />
+        <input class="form-check-input" asp-for="OrderModel.orders[index].Id" type="hidden" />
+
+    </td>
+
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].OrderNumber)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].OrderNumber" type="hidden" />
+    </td>
+
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].LineID)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].LineID" type="hidden" />
+    </td>
+
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].Item.Name)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].ItemId" type="hidden" />
+    </td>
+
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].PODNumber)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].PODNumber" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].PODName)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].PODName" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].PODZoneAddress)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].PODZoneAddress" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].PODZoneName)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].PODZoneName" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].PODZoneState)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].PODZoneState" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].PriorityQuantity)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].PriorityQuantity" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].Priority.Name)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].Priority.Name" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].Comment)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].Comment" type="hidden" />
+    </td>
+
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].Status)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].Status" type="hidden" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.OrderModel.orders[index].Comment)
+        <input class="form-check-input" asp-for="OrderModel.orders[index].Truck" type="hidden" />
+    </td>
+
+    @if (Model.OrderModel.orders[index].Dispatched == false && Model.SelectedPriorityDate >= DateTime.Today && Model.OrderModel.orders[index].Status != "Cancelled")
+    {
+<td>
+    <input type="checkbox" id="dispatchedCheckListId" class="DispatchedClass" asp-for="OrderModel.orders[index].Dispatched" />
+</td>
                         <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].Customer.CustomerName)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].CustomerId" type="hidden" />
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].Id" type="hidden" />
-
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].OrderNumber)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].OrderNumber" type="hidden" />
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].LineID)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].LineID" type="hidden" />
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].Item.Name)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].ItemId" type="hidden" />
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].PODNumber)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].PODNumber" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].PODName)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].PODName" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].PODZoneAddress)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].PODZoneAddress" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].PODZoneName)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].PODZoneName" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].PODZoneState)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].PODZoneState" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].PriorityQuantity)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].PriorityQuantity" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].Priority.Name)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].Priority.Name" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].Comment)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].Comment" type="hidden" />
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].Status)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].Status" type="hidden" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => model.OrderModel.orders[index].Comment)
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].Comment" type="hidden" />
-                        </td>
-
-                        @if (Model.OrderModel.orders[index].Dispatched == false && Model.SelectedPriorityDate >= DateTime.Today && Model.OrderModel.orders[index].Status != "Cancelled")
-                        {
-                            <td>
-                                <input type="checkbox" id="dispatchedCheckListId" class="DispatchedClass" asp-for="OrderModel.orders[index].Dispatched" />
-                            </td>
-                            <td>
-                                <a class="far fa-edit btn btn-info disabled" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
-                            </td>
-                        }
-                        else if (Model.OrderModel.orders[index].Dispatched == true && Model.SelectedPriorityDate >= DateTime.Today)
-                        {
+                            <a class="far fa-edit btn btn-info disabled" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
+                        </td> }
+                                            else if (Model.OrderModel.orders[index].Dispatched == true && Model.SelectedPriorityDate >= DateTime.Today)
+                                            {
 
 
-                            <td><label>Dispatched</label></td>
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].Dispatched" type="hidden" />
+                        <td><label>Dispatched</label></td>
+                                                <input class="form-check-input" asp-for="OrderModel.orders[index].Dispatched" type="hidden" />
 
 
-                            <td>
-                                <a class="far fa-edit btn btn-info" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="UnLockOrder" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
-                            </td>
-                        }
-                        else if (Model.OrderModel.orders[index].Dispatched == true && Model.SelectedPriorityDate < DateTime.Today)
-                        {
+                                                                        <td>
+                                                                            <a class="far fa-edit btn btn-info" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="UnLockOrder" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
+                                                                        </td> }
+                                                                                            else if (Model.OrderModel.orders[index].Dispatched == true && Model.SelectedPriorityDate < DateTime.Today)
+                                                                                            {
 
 
-                            <td><label>Dispatched</label></td>
-                            <input class="form-check-input" asp-for="OrderModel.orders[index].Dispatched" type="hidden" />
+                                                                        <td><label>Dispatched</label></td>
+                                                                                                <input class="form-check-input" asp-for="OrderModel.orders[index].Dispatched" type="hidden" />
 
 
-                            <td>
-                                <a class="far fa-edit btn btn-info disabled" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
-                            </td>
-                        }
-                        else if (Model.OrderModel.orders[index].Dispatched == false && Model.SelectedPriorityDate > DateTime.Today)
-                        {
-                            <td>
-                                <input type="checkbox" id="dispatchedCheckListId" class="DispatchedClass" asp-for="OrderModel.orders[index].Dispatched" />
-                            </td>
-                            <td>
-                                <a class="far fa-edit btn btn-info disabled" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <input class="form-check-input" asp-for="OrderModel.orders[index].Dispatched" type="hidden" />
-                            </td>
+                                                                                                                        <td>
+                                                                                                                            <a class="far fa-edit btn btn-info disabled" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
+                                                                                                                        </td> }
+                                                                                                                                            else if (Model.OrderModel.orders[index].Dispatched == false && Model.SelectedPriorityDate > DateTime.Today)
+                                                                                                                                            {
+                                                                                                                        <td>
+                                                                                                                            <input type="checkbox" id="dispatchedCheckListId" class="DispatchedClass" asp-for="OrderModel.orders[index].Dispatched" />
+                                                                                                                        </td>
+                                                                                                                                                <td>
+                                                                                                                                                    <a class="far fa-edit btn btn-info disabled" value="@Model.OrderModel.orders[index].Id" id=@UnlockId asp-action="" asp-route-id="@Model.OrderModel.orders[index].Id">Unlock</a>
+                                                                                                                                                </td> }
+                                                                                                                                                                    else
+                                                                                                                                                                    {
+                                                                                                                                                <td>
+                                                                                                                                                    <input class="form-check-input" asp-for="OrderModel.orders[index].Dispatched" type="hidden" />
+                                                                                                                                                </td>}
 
-                        }
+    <input class="form-check-input" asp-for="OrderModel.orders[index].SubmitTime" type="hidden" />
+    <input class="form-check-input" asp-for="OrderModel.orders[index].Customer.CustomerName" type="hidden" />
+    <input class="form-check-input" asp-for="OrderModel.orders[index].Customer.zone.Territory.state.Name" type="hidden" />
+    <input class="form-check-input" asp-for="OrderModel.orders[index].Priority.Name" type="hidden" />
 
-                        <input class="form-check-input" asp-for="OrderModel.orders[index].SubmitTime" type="hidden" />
-                        <input class="form-check-input" asp-for="OrderModel.orders[index].Customer.CustomerName" type="hidden" />
-                        <input class="form-check-input" asp-for="OrderModel.orders[index].Customer.zone.Territory.state.Name" type="hidden" />
-                        <input class="form-check-input" asp-for="OrderModel.orders[index].Priority.Name" type="hidden" />
-
-                        <input class="form-check-input" asp-for="@Model.SubRegionSelectedId" type="hidden" />
-                        <input class="form-check-input" asp-for="@Model.StateSelectedId" type="hidden" />
-                        <input class="form-check-input" asp-for="@Model.SelectedPriorityDate" type="hidden" />
-                        <input class="form-check-input" asp-for="@Model.ItemSelectedId" type="hidden" />
-                    </tr>
-
-                }
-            }
+    <input class="form-check-input" asp-for="@Model.SubRegionSelectedId" type="hidden" />
+    <input class="form-check-input" asp-for="@Model.StateSelectedId" type="hidden" />
+    <input class="form-check-input" asp-for="@Model.SelectedPriorityDate" type="hidden" />
+    <input class="form-check-input" asp-for="@Model.ItemSelectedId" type="hidden" />
+</tr>                }            }
             @if (Model.OrderModel != null)
             {
-                <div>
-                    <span> Summation</span>
-                    <input id="ordersQuantitySum" type="number" value="@Model.ordersQuantitySum" disabled style="margin:10px 20px 20px 0" />
-                    
-                </div>
-            }
+<div>
+    <span> Summation</span>
+    <input id="ordersQuantitySum" type="number" value="@Model.ordersQuantitySum" disabled style="margin:10px 20px 20px 0" />
+
+</div>            }
         </tbody>
     </table>
     @if (Model.SelectedPriorityDate >= DateTime.Today)
     {
-        <div class="form-group" style="margin-top:20px">
-            <input type="submit" value="Save" class="btn btn-primary" />
-        </div>
-    }
+<div class="form-group" style="margin-top:20px">
+    <input type="submit" value="Save" class="btn btn-primary" />
+</div>}
 
 
     <div class="form-group" style="margin-top:20px">

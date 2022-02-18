@@ -1,7 +1,7 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{ }
+@{  }
 @addTagHelper*, Microsoft.AspNetCore.Mvc.TagHelpers
 @{ ViewData["Title"] = "Home Page";
                 Layout = "~/Views/Shared/NiceAdmin/_CSLayout.cshtml"; }
@@ -11,12 +11,11 @@
         border-radius: 10px;
         width: 200px;
     }
+</style>
 
 @if (ViewBag.Message != null)
 {
-<div style="background-color: #00e600; height: 60px; box-shadow: 5px; margin: 0px 20px 20px 50px; text-align:center; font-size:x-large">@ViewBag.Message</div>
-}
-</style>
+<div style="background-color: #00e600; height: 60px; box-shadow: 5px; margin: 0px 20px 20px 50px; text-align:center; font-size:x-large">@ViewBag.Message</div>}
 <h2>Upload PIckUpOrders</h2>
 
 <div class="text-center uploadOrdersDiv">
