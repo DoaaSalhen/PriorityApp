@@ -35,6 +35,7 @@ using PriorityApp.Controllers.CustomerService;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using PriorityApp.Service.Models.Email;
 using PriorityApp.Service.Implementation.Email;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace PriporityApp_2
 {
@@ -122,8 +123,17 @@ namespace PriporityApp_2
             services.AddMvc().AddRazorPagesOptions(options => {
                 options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+           
             services.AddSignalR();
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = int.MaxValue;
+            });
 
+            services.AddMvc().AddMvcOptions(options =>
+    {
+        options.MaxModelValidationErrors = 999999;
+    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

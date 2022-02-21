@@ -220,8 +220,6 @@ namespace PriorityApp.Controllers
             return RedirectToAction("Index");
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SaveDispatchedOrders(GeoFilterModel Model)

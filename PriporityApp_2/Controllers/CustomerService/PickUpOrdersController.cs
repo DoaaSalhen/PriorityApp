@@ -428,28 +428,28 @@ namespace PriorityApp.Controllers.CustomerService
                             }
                             if (addResult == true)
                             {
-                                ViewBag.Message = "your File uploaded successfully";
+                                ViewBag.Message = "File Uploaded Successfully";
                                 return View();
                             }
                             else
                             {
-                                ViewBag.Message = "your File not uploaded";
+                                ViewBag.Error = "File Not Uploaded";
                                 return View();
                             }
                         }
                         else
                         {
-                            ViewBag.Message = "there is an error in your file";
+                            ViewBag.Error = "There is an error in your file";
                             return View();
                         }
                     }
                     else
                     {
-                        ViewBag.Message = "there is an error in your file";
+                        ViewBag.Error = "There is an error in your file, empty file";
                         return View();
                     }
                 }
-                ViewBag.Message = "please select valid file";
+                ViewBag.Error = "File Not Uploaded, please select valid file";
                 return View();
             }
             catch (Exception e)

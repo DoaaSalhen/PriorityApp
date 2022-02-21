@@ -69,45 +69,47 @@ namespace PriorityApp.Service.Implementation
                 foreach (DataRow row in dt.Rows)
                 {
                     string customerNumber = row["CustomerNumber"].ToString();
-                    double totalQuantityForCustomer = 0;
-                    var xxx = (DateTime.Compare((DateTime)row["PriorityDate"], DateTime.Today));
-                    var xxxx = (DateTime)row["PriorityDate"];
-                    var xx = (double)row["Priority"];
-                    var xxxxxx = (double)row["Priority"] == (double)CommanData.Priorities.Norm;
-                    if (((double)row["Priority"] == (double)CommanData.Priorities.Norm || (double)row["Priority"] == (double)CommanData.Priorities.Extra) && (DateTime.Compare((DateTime)row["PriorityDate"], DateTime.Today) <=0))
+                    if (customerNumber != "")
                     {
-                        CustomerModel customer = _deliveryCustomerService.GetDeliveryCustomer(Convert.ToInt64(customerNumber));
-                        var hold = _holdService.GetHold((DateTime)row["PriorityDate"], customer.zone.Territory.userId);
-                        if(hold != null && customer != null)
+                        double totalQuantityForCustomer = 0;
+                        var xxx = (DateTime.Compare((DateTime)row["PriorityDate"], DateTime.Today));
+                        var xxxx = (DateTime)row["PriorityDate"];
+                        var xx = (double)row["Priority"];
+                        var xxxxxx = (double)row["Priority"] == (double)CommanData.Priorities.Norm;
+                        if (((double)row["Priority"] == (double)CommanData.Priorities.Norm || (double)row["Priority"] == (double)CommanData.Priorities.Extra) && (DateTime.Compare((DateTime)row["PriorityDate"], DateTime.Today) >= 0))
                         {
-                            for (int index = itemStartIndex; index < dt.Columns.Count; index++)
+                            CustomerModel customer = _deliveryCustomerService.GetDeliveryCustomer(Convert.ToInt64(customerNumber));
+                            var hold = _holdService.GetHold((DateTime)row["PriorityDate"], customer.zone.Territory.userId);
+                            if (hold != null && customer != null)
                             {
-                                var x = row[index].ToString();
-
-                                if (row[index].ToString() != "")
+                                for (int index = itemStartIndex; index < dt.Columns.Count; index++)
                                 {
-                                    if ((double)row["Priority"] == (double)CommanData.Priorities.Norm)
+                                    var x = row[index].ToString();
+
+                                    if (row[index].ToString() != "")
                                     {
-                                        totalQuantityForCustomer = totalQuantityForCustomer + Convert.ToDouble(row[index]);
+                                        if ((double)row["Priority"] == (double)CommanData.Priorities.Norm)
+                                        {
+                                            totalQuantityForCustomer = totalQuantityForCustomer + Convert.ToDouble(row[index]);
+                                        }
+                                        newDT.Rows.Add(row[0], dt.Columns[index].ColumnName, row[index], row["Priority"], (DateTime)row["PriorityDate"], row["Comment"], row["Truck"]);
                                     }
-                                    newDT.Rows.Add(row[0], dt.Columns[index].ColumnName, row[index], row["Priority"], (DateTime)row["PriorityDate"], row["Comment"], row["Truck"]);
+                                }
+                                tempRemaining = hold.TempReminingQuantity - (float)totalQuantityForCustomer;
+                                if (tempRemaining < 0)
+                                {
+                                    return null;
                                 }
                             }
-                            tempRemaining = hold.TempReminingQuantity - (float)totalQuantityForCustomer;
-                            if (tempRemaining < 0)
+                            else
                             {
                                 return null;
-
                             }
                         }
                         else
                         {
                             return null;
                         }
-                    }
-                    else
-                    {
-                        return null;
                     }
                 }
 

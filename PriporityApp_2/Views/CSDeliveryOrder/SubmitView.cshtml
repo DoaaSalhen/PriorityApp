@@ -15,7 +15,7 @@
 
 <h4>Orders To submit</h4>
 
-<form class="form-group" action="Confirm" method="post">
+<form class="form-group" asp-action="Confirm" asp-controller="CSDeliveryOrder" method="post">
     <table>
         <thead>
             <tr>
@@ -51,8 +51,7 @@
             </tr>
         }
     </table>
-
-    <table id="example" class="display table table-striped" style="text-align: center; width:100%">
+    <table id="example" class="display table table-striped" style="text-align: center; width:100%; margin-top:10px">
         <thead class="table-dark">
             <tr>
                 <th>Salesman</th>

@@ -160,16 +160,33 @@ namespace PriorityApp.Service.Implementation.CustomerService
             {
                 var orders = _repository.Findlist().Result.GroupBy(x => x.OrderNumber).Where(x => x.Count() > 1).Select(x => x.Where(x => x.SavedBefore == false && x.OrderCategoryId == (int)CommanData.OrderCategory.Delivery)).ToList();
                 //var orders = _repository.Findlist().Result.Where(x => x.SavedBefore == false && x.OrderCategoryId == (int)CommanData.OrderCategory.Delivery).GroupBy(x => x.OrderNumber).Where(x => x.Count() > 1).ToList();
-                foreach (var order in orders.ToList())
+                var orders2 = _repository.Findlist().Result.Where(o=>o.OrderCategoryId==(int) CommanData.OrderCategory.Delivery).GroupBy(x => x.OrderNumber).Where(x => x.Count() > 1 ).ToList();
+                foreach(var order2 in orders2)
                 {
-                    var x = order.Select(o => o.Id).Any();
-                    if (x == true)
+                    var sumbittedOrder = order2.Where(o => o.Dispatched == true).Count();
+                    if(sumbittedOrder <1)
                     {
-                        long id = (long)order.Where(o => o.SavedBefore == false).Select(x => x.Id).FirstOrDefault();
-                        _repository.DeleteById(id);
-                    }
+                        foreach (var order in order2.ToList())
+                        {
+                            if (order.SavedBefore == false)
+                            {
+                               // long id = (long)order.Where(o => o.SavedBefore == false).Select(x => x.Id).FirstOrDefault();
+                                _repository.DeleteById(order.Id);
+                            }
 
+                        }
+                    }
                 }
+                //foreach (var order in orders.ToList())
+                //{
+                //    var x = order.Select(o => o.Id).Any();
+                //    if (x == true)
+                //    {
+                //        long id = (long)order.Where(o => o.SavedBefore == false).Select(x => x.Id).FirstOrDefault();
+                //        _repository.DeleteById(id);
+                //    }
+
+                //}
                 return true;
             }
             catch (Exception e)

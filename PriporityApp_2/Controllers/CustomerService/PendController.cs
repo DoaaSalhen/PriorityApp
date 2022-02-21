@@ -83,15 +83,15 @@ namespace MVCCore.ImportExcel.Controllers
                 }
                 if (fixResult == true)
                 {
-                    ViewBag.Message = "your File uploaded successfully";
+                    ViewBag.Message = " File Uploaded Successfully";
                 }
                 else
                 {
-                    ViewBag.Message = "your File not uploaded";
+                    ViewBag.Error = " File Not Uploaded";
                 }
                 return View();
             }
-            ViewBag.Message = "your File not uploaded";
+            ViewBag.Error = "File Not Uploaded, Please Select Valid File";
             return View();
         }
 

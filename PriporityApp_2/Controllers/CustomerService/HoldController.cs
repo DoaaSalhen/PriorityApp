@@ -167,8 +167,6 @@ namespace PriorityApp.Controllers.CustomerService
                     {
                         result = _holdService.AddQuotaFile(dt, SqlConnectionString);
                     }
-
-
                 }
                 //foreach (DataRow row in dt.Rows)
                 //{
@@ -179,16 +177,16 @@ namespace PriorityApp.Controllers.CustomerService
                 //}
                 if (result == true)
                 {
-                    ViewBag.Message = "your File uploaded successfully";  //you have added "+ dt.Rows.Count +" new Quota rows";
+                    ViewBag.Message = " File Uploaded Successfully";  //you have added "+ dt.Rows.Count +" new Quota rows";
                     return View();
                 }
                 else
                 {
-                    ViewBag.Message = "your File not uploaded";
+                    ViewBag.Error = " File Not Uploaded";
                     return View();
 
                 }
-                return View();
+                // return View();
             }
             catch (Exception e)
             {
